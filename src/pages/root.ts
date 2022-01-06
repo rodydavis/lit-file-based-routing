@@ -26,9 +26,8 @@ export class RootModule extends LitElement {
       <main>
         <aside>
           <a href="#/">Home</a>
-          <a href="#/settings/">Settings</a>
           <a href="#/dashboard/">Dashboard</a>
-          <a href="#/dashboard/overview">Dashboard (Overview)</a>
+          <a href="#/settings/">Settings</a>
         </aside>
         <section><slot></slot></section>
       </main>

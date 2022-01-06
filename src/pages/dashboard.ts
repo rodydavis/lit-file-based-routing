@@ -12,12 +12,20 @@ export class DashboardModule extends LitElement {
       flex-direction: row;
       align-items: center;
       padding-left: 10px;
+      padding-right: 10px;
+      justify-content: space-between;
     }
   `;
 
   render() {
     return html`<main>
-      <header>Dashboard</header>
+      <header>
+        <span class="title">Dashboard</span>
+        <nav>
+          <a href="#/dashboard/overview">Overview</a>
+          <a href="#/dashboard/account/">Account</a>
+        </nav>
+      </header>
       <section><slot></slot></section>
     </main> `;
   }

@@ -49,7 +49,6 @@ async function analyzePages() {
 }
 
 function buildApp(sb: StringBuilder, components: WebComponent[]) {
-  console.log(components);
   sb.writeln(`import { html, css, LitElement } from "lit";`);
   sb.writeln(`import { customElement, property } from "lit/decorators.js";`);
   sb.writeln();
@@ -133,7 +132,7 @@ function buildApp(sb: StringBuilder, components: WebComponent[]) {
     "      route = window.location.hash.slice(1);",
     '      if (route == "") route = "/";',
     "    }",
-    "    console.log(`current route: ${route}`);",
+    "    console.debug(`current route: ${route}`);",
     "    return route;",
     "  }",
     "}",

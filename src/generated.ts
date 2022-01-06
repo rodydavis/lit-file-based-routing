@@ -2,13 +2,17 @@
 
 // Page Routes
 import * as route0 from "./pages/404.js";
-import * as route1 from "./pages/dashboard/index.js";
-import * as route2 from "./pages/dashboard/overview.js";
-import * as route3 from "./pages/dashboard.js";
-import * as route4 from "./pages/index.js";
-import * as route5 from "./pages/root.js";
-import * as route6 from "./pages/settings/index.js";
-import * as route7 from "./pages/settings.js";
+import * as route1 from "./pages/dashboard/account/:id.js";
+import * as route2 from "./pages/dashboard/account/index.js";
+import * as route3 from "./pages/dashboard/account.js";
+import * as route4 from "./pages/dashboard/index.js";
+import * as route5 from "./pages/dashboard/overview.js";
+import * as route6 from "./pages/dashboard.js";
+import * as route7 from "./pages/index.js";
+import * as route8 from "./pages/root.js";
+import * as route9 from "./pages/settings/admin.js";
+import * as route10 from "./pages/settings/index.js";
+import * as route11 from "./pages/settings.js";
 
 import { html, css, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -25,13 +29,17 @@ export class GeneratedApp extends LitElement {
   @property() route = this.getHashRoute();
   components: Map<string, WebComponent> = new Map([
    ["/404", { name: "unknown-route", type: route0.UnknownRoute }],
-   ["/dashboard/", { name: "dashboard-default", type: route1.DashboardDefault }],
-   ["/dashboard/overview", { name: "dashboard-overview", type: route2.DashboardOverview }],
-   ["/dashboard", { name: "dashboard-module", type: route3.DashboardModule }],
-   ["/", { name: "app-module", type: route4.AppModule }],
-   ["", { name: "root-module", type: route5.RootModule }],
-   ["/settings/", { name: "settings-default", type: route6.SettingsDefault }],
-   ["/settings", { name: "settings-module", type: route7.SettingsModule }],
+   ["/dashboard/account/:id", { name: "account-details", type: route1.AccountDetails }],
+   ["/dashboard/account/", { name: "account-info", type: route2.AccountInfo }],
+   ["/dashboard/account", { name: "account-module", type: route3.AccountModule }],
+   ["/dashboard/", { name: "dashboard-default", type: route4.DashboardDefault }],
+   ["/dashboard/overview", { name: "overview-module", type: route5.OverviewModule }],
+   ["/dashboard", { name: "dashboard-module", type: route6.DashboardModule }],
+   ["/", { name: "app-module", type: route7.AppModule }],
+   ["", { name: "root-module", type: route8.RootModule }],
+   ["/settings/admin", { name: "admin-settings", type: route9.AdminSettings }],
+   ["/settings/", { name: "settings-default", type: route10.SettingsDefault }],
+   ["/settings", { name: "settings-module", type: route11.SettingsModule }],
   ]);
 
   firstUpdated() {
@@ -85,7 +93,7 @@ export class GeneratedApp extends LitElement {
       route = window.location.hash.slice(1);
       if (route == "") route = "/";
     }
-    console.log(`current route: ${route}`);
+    console.debug(`current route: ${route}`);
     return route;
   }
 }
