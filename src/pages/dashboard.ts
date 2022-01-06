@@ -1,12 +1,12 @@
 import { html, css, LitElement } from "lit";
 import { customElement } from "lit/decorators.js";
 
-@customElement("app-module")
-export class AppModule extends LitElement {
+@customElement("dashboard-module")
+export class DashboardModule extends LitElement {
   static styles = css`
     header {
       height: 40px;
-      background-color: navy;
+      background-color: orange;
       color: white;
       display: flex;
       flex-direction: row;
@@ -16,9 +16,9 @@ export class AppModule extends LitElement {
   `;
 
   render() {
-    return html` <main>
-      <header>App Base</header>
-      <slot></slot>
-    </main>`;
+    return html`<main>
+      <header>Dashboard</header>
+      <section><slot></slot></section>
+    </main> `;
   }
 }

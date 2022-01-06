@@ -5,28 +5,31 @@ import { StringBuilder } from "./string-builder.js";
 const inputDir = "./src/pages";
 const outputFile = "./src/generated.ts";
 
-function readPagesDirectory() {
-  const files = fs.readdirSync(inputDir);
-  const pages = files.map((file) => {
-    const path = `${inputDir}/${file}`;
-    const content = fs.readFileSync(path, "utf8");
-    return {
-      path,
-      content,
-    };
-  });
-  return pages;
+function readPagesDirectory(
+  dir: string,
+  pages: { path: string; content: string }[]
+) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    if (fs.statSync(`${dir}/${file}`).isDirectory()) {
+      readPagesDirectory(`${dir}/${file}`, pages);
+    } else {
+      const path = `${dir}/${file}`;
+      const content = fs.readFileSync(path, "utf8");
+      pages.push({ path, content });
+    }
+  }
 }
 
 async function analyzePages() {
-  const pages = readPagesDirectory();
-  // @ts-ignore
   const sb = new StringBuilder();
   sb.writeln("// @ts-nocheck");
   sb.writeln();
   let i = 0;
   sb.writeln(`// Page Routes`);
   const components: WebComponent[] = [];
+  const pages: { path: string; content: string }[] = [];
+  readPagesDirectory(inputDir, pages);
   for (const { path, content } of pages) {
     // Add import
     const filePath = path.replace("./src/", "./");
@@ -61,9 +64,7 @@ function buildApp(sb: StringBuilder, components: WebComponent[]) {
     "  `;",
     "",
     "  @property() route = this.getHashRoute();",
-    "  components: Map<string, WebComponent> = new Map();",
-    "",
-    "  firstUpdated() {",
+    "  components: Map<string, WebComponent> = new Map([",
   ]);
   sb.writeln();
   for (const component of components) {
@@ -72,13 +73,16 @@ function buildApp(sb: StringBuilder, components: WebComponent[]) {
     path = path.replace(".js", "");
     path = path.replace("/index", "/");
     if (path == "/root") path = "";
-    sb.write(`   this.components.set("${path}", `);
+    sb.write(`   ["${path}", `);
     sb.write(
       `{ name: "${component.name}", type: ${component.alias}.${component.type} }`
     );
-    sb.writeln(");");
+    sb.writeln("],");
   }
   sb.writeAll([
+    "  ]);",
+    "",
+    "  firstUpdated() {",
     '    window.addEventListener("hashchange", () => {',
     "      this.route = this.getHashRoute();",
     "      this.requestUpdate();",
@@ -86,9 +90,41 @@ function buildApp(sb: StringBuilder, components: WebComponent[]) {
     "  }",
     "",
     "  render() {",
-    "    return html` <main>",
-    "      <slot></slot>",
-    "    </main>`;",
+    '    let child: Element = document.createElement("div");',
+    "    let _route = this.route;",
+    '    if (_route !== "/") {',
+    "    while (_route.length > 0) {",
+    "        child = this.getComponent(_route, child);",
+    '        const parts = _route.split("/");',
+    "        parts.pop();",
+    '        _route = parts.join("/");',
+    '        if (_route === "/") break;',
+    "    }",
+    '      child = this.getComponent("", child);',
+    '    } else if (_route === "/") {',
+    '      child = this.getComponent("/", child);',
+    '      child = this.getComponent("", child);',
+    "    } else {",
+    '      child = this.getComponent("/404", child);',
+    "  }",
+    "    return html` <main>${child}</main>`;",
+    "  }",
+    "",
+    "  private getComponent(path: string, child: Element) {",
+    "  for (const [key, value] of Array.from(this.components.entries())) {",
+    "    const regMatch = path.match(fixRegex(key));",
+    "    if (regMatch) {",
+    "      const elem = document.createElement(value.name);",
+    "      if (regMatch.groups) {",
+    "        for (const [key, value] of Object.entries(regMatch.groups)) {",
+    "            elem.setAttribute(key, value);",
+    "          }",
+    "        }",
+    "        elem.appendChild(child);",
+    "        return elem;",
+    "      }",
+    "    }",
+    "    return child;",
     "  }",
     "",
     "  private getHashRoute() {",
@@ -100,6 +136,18 @@ function buildApp(sb: StringBuilder, components: WebComponent[]) {
     "    console.log(`current route: ${route}`);",
     "    return route;",
     "  }",
+    "}",
+    "",
+    "function fixRegex(route: string): RegExp {",
+    '  const variableRegex = "[a-zA-Z0-9_-]+";',
+    "  const nameWithParameters = route.replace(",
+    "    new RegExp(`:(${variableRegex})`),",
+    "    (match) => {",
+    "      const groupName = match.slice(1);",
+    "      return `(?<${groupName}>[a-zA-Z0-9_\\\\-.,:;+*^%$@!]+)`;",
+    "    }",
+    "  );",
+    "  return new RegExp(`^${nameWithParameters}$`);",
     "}",
     "",
     "interface WebComponent {",
