@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run ts && vite build",
-    "ts": "tsc",
-    "generate": "npm run ts && node dist/generator/index.js"
+    "build": "vite build",
+    "prebuild": "npm run ts && npm run generate",
+    "generate": "npm run ts && node dist/generator/index.js",
+    "ts": "tsc"
   },
   "dependencies": {
     "lit": "^2.0.2"
