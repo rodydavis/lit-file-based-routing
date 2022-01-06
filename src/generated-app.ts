@@ -27,7 +27,7 @@ export class GeneratedApp extends LitElement {
   `;
 
   @property() hash = 'true';
-  @property({attribute: 'base-url'}) baseUrl = '/';
+  @property() base = '/';
   @property() route = this.getCurrentRoute();
 
   components: Map<string, string> = new Map([
@@ -80,8 +80,8 @@ export class GeneratedApp extends LitElement {
         return elem;
     }
     const regMatch = path.match(fixRegex(key));
-    if (regMatch) {
-      const elem = document.createElement(value.name);
+    if (regMatch !== null) {
+      const elem = document.createElement(value);
       if (regMatch.groups) {
         for (const [key, value] of Object.entries(regMatch.groups)) {
             elem.setAttribute(key, value);
@@ -99,7 +99,7 @@ export class GeneratedApp extends LitElement {
     if (this.hash ==='true' && window.location.hash.length > 0) {
       route = window.location.hash.slice(1);
     } else {
-      const baseUrl = this.getAttribute("base") ?? "";
+      const baseUrl = this.getAttribute('base') ?? '';
       route = window.location.pathname.slice(baseUrl.length);
     }
     if (route == '') route = '/';
