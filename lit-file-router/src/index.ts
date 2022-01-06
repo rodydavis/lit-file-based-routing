@@ -3,7 +3,7 @@ import ts from "typescript";
 import { StringBuilder } from "./string-builder.js";
 
 const inputDir = "./src/pages";
-const outputFile = "./src/generated.ts";
+const outputFile = "./src/generated-app.ts";
 
 function readPagesDirectory(
   dir: string,

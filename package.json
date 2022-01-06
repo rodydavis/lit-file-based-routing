@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prebuild": "npm run ts && npm run generate",
-    "generate": "npm run ts && node dist/generator/index.js",
-    "ts": "tsc"
+    "prebuild": "tsc && npm run generate",
+    "generate": "tsc && node lit-file-router"
   },
   "dependencies": {
-    "lit": "^2.0.2"
+    "lit": "^2.0.2",
+    "lit-file-router": "file:lit-file-router"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",

@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "name": "lit-file-router",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "preinstall": "npm run build",
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "typescript": "^4.4.4"
+  }
+}
