@@ -2,8 +2,8 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/lit-file-based-routing/",
   build: {
-    base: "/lit-file-based-routing/",
     rollupOptions: {
       input: "index.html",
     },
