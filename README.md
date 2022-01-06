@@ -1,6 +1,6 @@
 # Lit File Based Routing
 
-Lit router for nested layouts and file based routing.
+Lit router for nested layouts and file based routing. Similar to https://remix.run/ but at runtime.
 
 [Demo](https://rodydavis.github.io/lit-file-based-routing/)
 
@@ -161,3 +161,14 @@ export class AccountDetails extends LitElement {
 ```
 
 You can see we set the file name with a prefix of `:` to define an arg to look for and match against. This will be provided in a map.
+
+## Usage
+
+If you install the package locally you can run `node lit-file-router` to have `src/generated-app.ts` added as a file when it analyzes the `src/pages/` directory.
+
+```html
+<body>
+    <generated-app> </generated-app>
+    <script type="module" src="/src/generated-app.ts"></script>
+</body>
+```

@@ -7,7 +7,7 @@
     "build": "vite build",
     "start": "npm run dev",
     "prebuild": "tsc && npm run generate",
-    "generate": "tsc && node lit-file-router"
+    "generate": "node lit-file-router"
   },
   "dependencies": {
     "lit": "^2.0.2",
