@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "npm run dev",
     "prebuild": "tsc && npm run generate",
     "generate": "tsc && node lit-file-router"
   },
