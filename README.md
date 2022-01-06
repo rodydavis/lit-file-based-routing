@@ -2,7 +2,7 @@
 
 Lit router for nested layouts and file based routing. Similar to https://remix.run/ but at runtime.
 
-[Demo](https://rodydavis.github.io/lit-file-based-routing/)
+[Demo](https://rodydavis.github.io/lit-file-based-routing/#/dashboard/)
 
 [Package](/lit-file-router/)
 

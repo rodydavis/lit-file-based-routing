@@ -99,7 +99,7 @@ export class GeneratedApp extends LitElement {
     if (this.hash ==='true' && window.location.hash.length > 0) {
       route = window.location.hash.slice(1);
     } else {
-      const baseUrl = this.getAttribute('base');
+      const baseUrl = this.getAttribute("base") ?? "";
       route = window.location.pathname.slice(baseUrl.length);
     }
     if (route == '') route = '/';
