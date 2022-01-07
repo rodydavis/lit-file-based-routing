@@ -3,7 +3,9 @@ import { StringBuilder } from "./string-builder";
 
 export function generateApp(sb: StringBuilder, components: WebComponent[]) {
   sb.writeln(`import { html, css, LitElement } from "lit";`);
-  sb.writeln(`import { customElement, property } from "lit/decorators.js";`);
+  sb.writeln(
+    `import { customElement, property, state } from "lit/decorators.js";`
+  );
   sb.writeln();
   sb.writeAll([
     '@customElement("generated-app")',
@@ -18,6 +20,7 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "  @property() hash = 'true';",
     "  @property() base = '/';",
     "  @property() route = this.getCurrentRoute();",
+    "  @state() child = document.createElement('main');",
     "",
     "  components: Map<string, string> = new Map([",
   ]);
@@ -27,6 +30,10 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     path = path.replace(".ts", "");
     path = path.replace(".js", "");
     path = path.replace("/index", "/");
+    // Check if path contains . and convert to /
+    if (path.indexOf(".") > -1) {
+      path = path.split(".").join("/");
+    }
     if (path == "/root") path = "";
     sb.writeln(`   ["${path}", "${component.name}"],`);
   }
