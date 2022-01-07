@@ -24,8 +24,8 @@ function readPagesDirectory(
 
 async function analyzePages() {
   const sb = new StringBuilder();
-  sb.writeln("// @ts-nocheck");
-  sb.writeln();
+  // sb.writeln("// @ts-nocheck");
+  // sb.writeln();
   let i = 0;
   sb.writeln(`// Page Routes`);
   const components: WebComponent[] = [];
@@ -35,10 +35,9 @@ async function analyzePages() {
     // Add import
     const filePath = path.replace("./src/", "./");
     const jsPath = filePath.replace(".ts", ".js");
-    // sb.writeln(`import * as route${i} from "${jsPath}";`);
-    sb.writeln(`import "${jsPath}";`);
     const results = analyzePage(path, content);
     if (results.length > 0) {
+      sb.writeln(`import "${jsPath}";`);
       const c = results[0];
       c.alias = `route${i}`;
       components.push(c);
