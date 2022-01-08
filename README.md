@@ -172,3 +172,60 @@ If you install the package locally you can run `node lit-file-router` to have `s
     <script type="module" src="/src/generated-app.ts"></script>
 </body>
 ```
+
+### Dynamic Imports
+
+You can have the components load async with dynamic imports using the following command:
+
+`node lit-file-router --dynamic-imports=true`
+
+By default it will use static imports and have everything loaded at runtime.
+
+### Data caching and loader function
+
+You can export a loader function that will be used to set data on the component:
+
+```js
+import { html, css, LitElement } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
+export async function loader(
+  route: string,
+  args: { [key: string]: any }
+): Promise<AccountData> {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const id = args["id"]!;
+  return {
+    id,
+    name: "Name: " + id,
+    email: route,
+  };
+}
+
+@customElement("account-details")
+export class AccountDetails extends LitElement {
+  static styles = css``;
+
+  @property({ type: String }) id = "";
+  @property({ type: Object }) data!: AccountData;
+
+  render() {
+    return html`<section>User ID: ${this.data.id}</section>`;
+  }
+}
+
+interface AccountData {
+  id: string;
+  name: string;
+  email: string;
+}
+
+```
+
+This will call the function to load the data before rendering starts.
+
+If you want to enable caching you can add the following command:
+
+`node lit-file-router --cache-all`
+
+It is off by default but it will cache the data from the loader function for the component and route and will pass the cached data from memory to the component.

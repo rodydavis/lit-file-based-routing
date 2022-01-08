@@ -209,6 +209,11 @@ function fixRegex(route: string): RegExp {
 interface Route {
   component: string;
   loadImport: () => Promise<any>;
-  loadData: () => Promise<any>;
+  loadData: () => Promise<RouteLoader | null>;
 }
+
+type RouteLoader = (
+  route: string,
+  args: { [key: string]: any }
+) => Promise<any>;
 

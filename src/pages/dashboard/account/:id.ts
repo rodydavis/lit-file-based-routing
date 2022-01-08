@@ -1,7 +1,10 @@
 import { html, css, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-export async function loader(route: string, args: { [key: string]: any }) {
+export async function loader(
+  route: string,
+  args: { [key: string]: any }
+): Promise<AccountData> {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const id = args["id"]!;
   return {

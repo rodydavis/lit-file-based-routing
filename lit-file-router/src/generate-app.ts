@@ -139,15 +139,21 @@ export function generateApp(
     "    for (const [key, value] of Array.from(this.components.entries())) {",
     "      const hasArgs = path.match(fixRegex(key)) !== null;",
     "      if (key === path || path.match(fixRegex(key)) !== null) {",
-    "        const cacheKey = `${path}:${value.component}`;",
-    "        if (this.dataCache.has(cacheKey)) {",
-    "          const data = this.dataCache.get(cacheKey)!;",
-    "          return applyArgs(value.component, hasArgs, data);",
-    "        }",
+    ...(options.cacheAll
+      ? [
+          "        const cacheKey = `${path}:${value.component}`;",
+          "        if (this.dataCache.has(cacheKey)) {",
+          "          const data = this.dataCache.get(cacheKey)!;",
+          "          return applyArgs(value.component, hasArgs, data);",
+          "        }",
+        ]
+      : []),
     "        const getLoader = await value.loadData();",
     "        if (getLoader) {",
     "          const componentData = await getLoader(this.route, args ? Object(args)['groups'] : {});",
-    "          this.dataCache.set(cacheKey, componentData);",
+    ...(options.cacheAll
+      ? ["          this.dataCache.set(cacheKey, componentData);"]
+      : []),
     "          return applyArgs(value.component, hasArgs, componentData);",
     "        }",
     ...(options.staticImports ? [] : ["        await value.loadImport();"]),
@@ -194,8 +200,13 @@ export function generateApp(
     "interface Route {",
     "  component: string;",
     "  loadImport: () => Promise<any>;",
-    "  loadData: () => Promise<any>;",
+    "  loadData: () => Promise<RouteLoader | null>;",
     "}",
+    "",
+    "type RouteLoader = (",
+    "  route: string,",
+    "  args: { [key: string]: any }",
+    ") => Promise<any>;",
     "",
   ]);
   sb.writeln();
