@@ -1,0 +1,1 @@
+import{s as f,$ as l,r as o,n as _}from"./vendor.03706caa.js";var a=Object.defineProperty,m=Object.getOwnPropertyDescriptor,c=(v,r,t,s)=>{for(var e=s>1?void 0:s?m(r,t):r,n=v.length-1,i;n>=0;n--)(i=v[n])&&(e=(s?i(r,t,e):i(e))||e);return s&&e&&a(r,t,e),e};let p=class extends f{render(){return l`Admin Settings`}};p.styles=o``;p=c([_("admin-settings")],p);export{p as AdminSettings};
