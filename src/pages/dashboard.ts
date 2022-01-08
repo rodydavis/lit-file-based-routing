@@ -1,6 +1,8 @@
 import { html, css, LitElement } from "lit";
 import { customElement } from "lit/decorators.js";
 
+import '../components/menu-button.js';
+
 @customElement("dashboard-module")
 export class DashboardModule extends LitElement {
   static styles = css`
@@ -20,6 +22,7 @@ export class DashboardModule extends LitElement {
   render() {
     return html`<main>
       <header>
+        <menu-button></menu-button>
         <span class="title">Dashboard</span>
         <nav>
           <a href="#/dashboard/overview">Overview</a>

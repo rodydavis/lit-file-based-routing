@@ -1,6 +1,8 @@
 import { html, css, LitElement } from "lit";
 import { customElement } from "lit/decorators.js";
 
+import "../components/menu-button.js";
+
 @customElement("settings-module")
 export class SettingsModule extends LitElement {
   static styles = css`
@@ -17,7 +19,10 @@ export class SettingsModule extends LitElement {
 
   render() {
     return html` <main>
-      <header>Settings</header>
+      <header>
+        <menu-button></menu-button>
+        <span class="title">Settings</span>
+      </header>
       <slot></slot>
     </main>`;
   }
