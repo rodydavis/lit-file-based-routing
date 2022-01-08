@@ -1,17 +1,3 @@
-// Page Routes
-import "./pages/404.js";
-import "./pages/custom.not.nested.route.js";
-import "./pages/dashboard/account/:id.js";
-import "./pages/dashboard/account/index.js";
-import "./pages/dashboard/account.js";
-import "./pages/dashboard/index.js";
-import "./pages/dashboard/overview.js";
-import "./pages/dashboard.js";
-import "./pages/index.js";
-import "./pages/root.js";
-import "./pages/settings/admin.js";
-import "./pages/settings/index.js";
-import "./pages/settings.js";
 
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
@@ -29,27 +15,83 @@ export class GeneratedApp extends LitElement {
   @property() base = '/';
   @property() route = this.getCurrentRoute();
   @state() child = document.createElement('main');
-
-  components: Map<string, string> = new Map([
-   ["/404", "unknown-route"],
-   ["/custom/not/nested/route", "custom-route"],
-   ["/dashboard/account/:id", "account-details"],
-   ["/dashboard/account/", "account-info"],
-   ["/dashboard/account", "account-module"],
-   ["/dashboard/", "dashboard-default"],
-   ["/dashboard/overview", "overview-module"],
-   ["/dashboard", "dashboard-module"],
-   ["/", "app-module"],
-   ["", "root-module"],
-   ["/settings/admin", "admin-settings"],
-   ["/settings/", "settings-default"],
-   ["/settings", "settings-module"],
+  dataCache = new Map<string, any>();
+  components: Map<string, Route> = new Map([
+   ["/404", {
+      component: "unknown-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/404.js"),
+    }],
+   ["/custom/not/nested/route", {
+      component: "custom-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/custom.not.nested.route.js"),
+    }],
+   ["/dashboard/account/:id", {
+      component: "account-details",
+      loadData: async () => {
+        const {loader} = await import("./pages/dashboard/account/:id.js");
+        return loader;
+      },
+      loadImport: () => import("./pages/dashboard/account/:id.js"),
+    }],
+   ["/dashboard/account/", {
+      component: "account-info",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/account/index.js"),
+    }],
+   ["/dashboard/account", {
+      component: "account-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/account.js"),
+    }],
+   ["/dashboard/", {
+      component: "dashboard-default",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/index.js"),
+    }],
+   ["/dashboard/overview", {
+      component: "overview-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/overview.js"),
+    }],
+   ["/dashboard", {
+      component: "dashboard-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard.js"),
+    }],
+   ["/", {
+      component: "app-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/index.js"),
+    }],
+   ["", {
+      component: "root-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/root.js"),
+    }],
+   ["/settings/admin", {
+      component: "admin-settings",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings/admin.js"),
+    }],
+   ["/settings/", {
+      component: "settings-default",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings/index.js"),
+    }],
+   ["/settings", {
+      component: "settings-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings.js"),
+    }],
   ]);
 
   firstUpdated() {
     window.addEventListener("hashchange", () => {
+      const oldRoute = this.route;
       this.route = this.getCurrentRoute();
-      this.updateTree();
+      this.updateTree(oldRoute);
     });
     this.updateTree();
   }
@@ -58,7 +100,10 @@ export class GeneratedApp extends LitElement {
     return html` ${this.child} `;
   }
 
-  private async updateTree() {
+  private async updateTree(oldRoute?:string) {
+    if (oldRoute) {
+      // TODO: Get delta between old and new route
+    }
     // Remove children
     while (this.child.firstChild) {
       this.child.removeChild(this.child.firstChild);
@@ -75,27 +120,27 @@ export class GeneratedApp extends LitElement {
     const args = this.getArgsForRoute(_route);
     if (_route !== "/") {
       while (_route.length > 0) {
-        child = this.getComponent(_route, child, args);
+        child = await this.getComponent(_route, child, args);
         const parts = _route.split("/");
         parts.pop();
         _route = parts.join("/");
         if (_route === "/") break;
       }
     } else if (_route === "/") {
-      child = this.getComponent("/", child, args);
+      child = await this.getComponent("/", child, args);
     } else {
-      child = this.getComponent("/404", child, args);
+      child = await this.getComponent("/404", child, args);
     }
-    child = this.getComponent("", child, args);
+    child = await this.getComponent("", child, args);
     return child;
   }
 
-  private getComponent(
+  private async getComponent(
     path: string,
     child: Element,
     args: RegExpMatchArray | null
   ) {
-    const applyArgs = (value: string, apply: boolean = true) => {
+    const applyArgs = (value: string, apply: boolean, data?: any) => {
       const elem = document.createElement(value);
       elem.appendChild(child);
       if (apply && args?.groups) {
@@ -103,12 +148,26 @@ export class GeneratedApp extends LitElement {
           elem.setAttribute(key, value);
         }
       }
+      if (data) (elem as any).data = data;
       return elem;
     };
     for (const [key, value] of Array.from(this.components.entries())) {
-      if (key === path) return applyArgs(value, false);
-      const regMatch = path.match(fixRegex(key));
-      if (regMatch !== null) return applyArgs(value);
+      const hasArgs = path.match(fixRegex(key)) !== null;
+      if (key === path || path.match(fixRegex(key)) !== null) {
+        const cacheKey = `${path}:${value.component}`;
+        if (this.dataCache.has(cacheKey)) {
+          const data = this.dataCache.get(cacheKey)!;
+          return applyArgs(value.component, hasArgs, data);
+        }
+        const getLoader = await value.loadData();
+        if (getLoader) {
+          const componentData = await getLoader(this.route, args ? Object(args)['groups'] : {});
+          this.dataCache.set(cacheKey, componentData);
+          return applyArgs(value.component, hasArgs, componentData);
+        }
+        await value.loadImport();
+        return applyArgs(value.component, hasArgs);
+      }
     }
     return child;
   }
@@ -145,5 +204,11 @@ function fixRegex(route: string): RegExp {
     }
   );
   return new RegExp(`^${nameWithParameters}$`);
+}
+
+interface Route {
+  component: string;
+  loadImport: () => Promise<any>;
+  loadData: () => Promise<any>;
 }
 

@@ -1,7 +1,11 @@
 import { WebComponent } from "./analyze-page";
 import { StringBuilder } from "./string-builder";
 
-export function generateApp(sb: StringBuilder, components: WebComponent[]) {
+export function generateApp(
+  sb: StringBuilder,
+  components: WebComponent[],
+  options: { staticImports: boolean; cacheAll: boolean }
+) {
   sb.writeln(`import { html, css, LitElement } from "lit";`);
   sb.writeln(
     `import { customElement, property, state } from "lit/decorators.js";`
@@ -22,9 +26,11 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "  @property() route = this.getCurrentRoute();",
     "  @state() child = document.createElement('main');",
     "",
-    "  components: Map<string, string> = new Map([",
   ]);
-  sb.writeln();
+  if (options.cacheAll) {
+    sb.writeln("  dataCache = new Map<string, any>();");
+  }
+  sb.writeln("  components: Map<string, Route> = new Map([");
   for (const component of components) {
     let path = component.path.replace("./src/pages/", "/");
     path = path.replace(".ts", "");
@@ -35,15 +41,42 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
       path = path.split(".").join("/");
     }
     if (path == "/root") path = "";
-    sb.writeln(`   ["${path}", "${component.name}"],`);
+    // sb.writeln(`   ["${path}", "${component.name}"],`);]
+    sb.writeln(`   ["${path}", {
+      component: "${component.name}",`);
+    const componentImportPath = component.path
+      .replace("./src/", "./")
+      .replace(".ts", ".js");
+    if (component.hasLoader) {
+      if (options.staticImports) {
+        sb.writeln(`      loadData: async () => {
+        return ${component.alias}Loader;
+      },`);
+      } else {
+        sb.writeln(`      loadData: async () => {
+        const {loader} = await import("${componentImportPath}");
+        return loader;
+      },`);
+      }
+    } else {
+      sb.writeln(`      loadData: async () => null,`);
+    }
+    if (options.staticImports) {
+      sb.writeln(`      loadImport: async () => {},
+    }],`);
+    } else {
+      sb.writeln(`      loadImport: () => import("${componentImportPath}"),
+    }],`);
+    }
   }
   sb.writeAll([
     "  ]);",
     "",
     "  firstUpdated() {",
     '    window.addEventListener("hashchange", () => {',
+    "      const oldRoute = this.route;",
     "      this.route = this.getCurrentRoute();",
-    "      this.updateTree();",
+    "      this.updateTree(oldRoute);",
     "    });",
     "    this.updateTree();",
     "  }",
@@ -52,7 +85,10 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "    return html` ${this.child} `;",
     "  }",
     "",
-    "  private async updateTree() {",
+    "  private async updateTree(oldRoute?:string) {",
+    "    if (oldRoute) {",
+    "      // TODO: Get delta between old and new route",
+    "    }",
     "    // Remove children",
     "    while (this.child.firstChild) {",
     "      this.child.removeChild(this.child.firstChild);",
@@ -69,27 +105,27 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "    const args = this.getArgsForRoute(_route);",
     '    if (_route !== "/") {',
     "      while (_route.length > 0) {",
-    "        child = this.getComponent(_route, child, args);",
+    "        child = await this.getComponent(_route, child, args);",
     '        const parts = _route.split("/");',
     "        parts.pop();",
     '        _route = parts.join("/");',
     '        if (_route === "/") break;',
     "      }",
     '    } else if (_route === "/") {',
-    '      child = this.getComponent("/", child, args);',
+    '      child = await this.getComponent("/", child, args);',
     "    } else {",
-    '      child = this.getComponent("/404", child, args);',
+    '      child = await this.getComponent("/404", child, args);',
     "    }",
-    '    child = this.getComponent("", child, args);',
+    '    child = await this.getComponent("", child, args);',
     "    return child;",
     "  }",
     "",
-    "  private getComponent(",
+    "  private async getComponent(",
     "    path: string,",
     "    child: Element,",
     "    args: RegExpMatchArray | null",
     "  ) {",
-    "    const applyArgs = (value: string, apply: boolean = true) => {",
+    "    const applyArgs = (value: string, apply: boolean, data?: any) => {",
     "      const elem = document.createElement(value);",
     "      elem.appendChild(child);",
     "      if (apply && args?.groups) {",
@@ -97,12 +133,26 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "          elem.setAttribute(key, value);",
     "        }",
     "      }",
+    "      if (data) (elem as any).data = data;",
     "      return elem;",
     "    };",
     "    for (const [key, value] of Array.from(this.components.entries())) {",
-    "      if (key === path) return applyArgs(value, false);",
-    "      const regMatch = path.match(fixRegex(key));",
-    "      if (regMatch !== null) return applyArgs(value);",
+    "      const hasArgs = path.match(fixRegex(key)) !== null;",
+    "      if (key === path || path.match(fixRegex(key)) !== null) {",
+    "        const cacheKey = `${path}:${value.component}`;",
+    "        if (this.dataCache.has(cacheKey)) {",
+    "          const data = this.dataCache.get(cacheKey)!;",
+    "          return applyArgs(value.component, hasArgs, data);",
+    "        }",
+    "        const getLoader = await value.loadData();",
+    "        if (getLoader) {",
+    "          const componentData = await getLoader(this.route, args ? Object(args)['groups'] : {});",
+    "          this.dataCache.set(cacheKey, componentData);",
+    "          return applyArgs(value.component, hasArgs, componentData);",
+    "        }",
+    ...(options.staticImports ? [] : ["        await value.loadImport();"]),
+    "        return applyArgs(value.component, hasArgs);",
+    "      }",
     "    }",
     "    return child;",
     "  }",
@@ -139,6 +189,12 @@ export function generateApp(sb: StringBuilder, components: WebComponent[]) {
     "    }",
     "  );",
     "  return new RegExp(`^${nameWithParameters}$`);",
+    "}",
+    "",
+    "interface Route {",
+    "  component: string;",
+    "  loadImport: () => Promise<any>;",
+    "  loadData: () => Promise<any>;",
     "}",
     "",
   ]);
