@@ -144,6 +144,9 @@ export function generateApp(
           "        const cacheKey = `${path}:${value.component}`;",
           "        if (this.dataCache.has(cacheKey)) {",
           "          const data = this.dataCache.get(cacheKey)!;",
+          ...(options.staticImports
+            ? []
+            : ["          await value.loadImport();"]),
           "          return applyArgs(value.component, hasArgs, data);",
           "        }",
         ]
@@ -154,6 +157,7 @@ export function generateApp(
     ...(options.cacheAll
       ? ["          this.dataCache.set(cacheKey, componentData);"]
       : []),
+    ...(options.staticImports ? [] : ["          await value.loadImport();"]),
     "          return applyArgs(value.component, hasArgs, componentData);",
     "        }",
     ...(options.staticImports ? [] : ["        await value.loadImport();"]),

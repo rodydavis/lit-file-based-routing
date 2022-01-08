@@ -157,12 +157,14 @@ export class GeneratedApp extends LitElement {
         const cacheKey = `${path}:${value.component}`;
         if (this.dataCache.has(cacheKey)) {
           const data = this.dataCache.get(cacheKey)!;
+          await value.loadImport();
           return applyArgs(value.component, hasArgs, data);
         }
         const getLoader = await value.loadData();
         if (getLoader) {
           const componentData = await getLoader(this.route, args ? Object(args)['groups'] : {});
           this.dataCache.set(cacheKey, componentData);
+          await value.loadImport();
           return applyArgs(value.component, hasArgs, componentData);
         }
         await value.loadImport();
