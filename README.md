@@ -1,3 +1,5 @@
+[![Demo](https://github.com/rodydavis/lit-file-based-routing/actions/workflows/ci.yml/badge.svg)](https://github.com/rodydavis/lit-file-based-routing/actions/workflows/ci.yml)
+
 # Lit File Based Routing
 
 Lit router for nested layouts and file based routing. Similar to https://remix.run/ but at client side.

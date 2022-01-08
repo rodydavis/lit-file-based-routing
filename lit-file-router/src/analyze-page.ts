@@ -13,7 +13,6 @@ export function analyzePage(path: string, content: string): WebComponent[] {
       break;
     }
   }
-
   // Look for @customElement decorator and get the value
   const regex = /@customElement\("([^"]+)"\)/g;
   const matches = content.match(regex);

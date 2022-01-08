@@ -9,8 +9,8 @@ export async function loader(
   const id = args["id"]!;
   return {
     id,
+    route,
     name: "Name: " + id,
-    email: route,
   };
 }
 
@@ -22,12 +22,12 @@ export class AccountDetails extends LitElement {
   @property({ type: Object }) data!: AccountData;
 
   render() {
-    return html`<section>User ID: ${this.data.id}</section>`;
+    return html`<section>${this.data.name}</section>`;
   }
 }
 
 interface AccountData {
   id: string;
+  route: string;
   name: string;
-  email: string;
 }
