@@ -1,5 +1,6 @@
-import{s as i,$ as l,r as c,n as p}from"./vendor.03706caa.js";var h=Object.defineProperty,v=Object.getOwnPropertyDescriptor,f=(d,r,o,a)=>{for(var e=a>1?void 0:a?v(r,o):r,s=d.length-1,n;s>=0;s--)(n=d[s])&&(e=(a?n(r,o,e):n(e))||e);return a&&e&&h(r,o,e),e};let t=class extends i{render(){return l`<main>
+import{s as i,$ as c,r as l,n as p}from"./vendor.03706caa.js";import"./menu-button.fa75c998.js";var h=Object.defineProperty,u=Object.getOwnPropertyDescriptor,f=(d,r,t,a)=>{for(var e=a>1?void 0:a?u(r,t):r,n=d.length-1,o;n>=0;n--)(o=d[n])&&(e=(a?o(r,t,e):o(e))||e);return a&&e&&h(r,t,e),e};let s=class extends i{render(){return c`<main>
       <header>
+        <menu-button></menu-button>
         <span class="title">Dashboard</span>
         <nav>
           <a href="#/dashboard/overview">Overview</a>
@@ -7,7 +8,7 @@ import{s as i,$ as l,r as c,n as p}from"./vendor.03706caa.js";var h=Object.defin
         </nav>
       </header>
       <section><slot></slot></section>
-    </main> `}};t.styles=c`
+    </main> `}};s.styles=l`
     header {
       height: 40px;
       background-color: orange;
@@ -19,4 +20,4 @@ import{s as i,$ as l,r as c,n as p}from"./vendor.03706caa.js";var h=Object.defin
       padding-right: 10px;
       justify-content: space-between;
     }
-  `;t=f([p("dashboard-module")],t);export{t as DashboardModule};
+  `;s=f([p("dashboard-module")],s);export{s as DashboardModule};
