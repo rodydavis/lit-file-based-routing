@@ -125,7 +125,7 @@ export function generateApp(
     '    if (_route !== "/") {',
     "      while (_route.length > 0) {",
     "        const newChild = await this.getComponent(_route, child, args);",
-    "        if (newChild === child) {",
+    "        if (newChild === child && _route === this.route) {",
     '          child = await this.getComponent("/404", child, args);',
     "          break;",
     "        }",
