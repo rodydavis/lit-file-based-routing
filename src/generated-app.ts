@@ -9,10 +9,19 @@ export class GeneratedApp extends LitElement {
       width: 100%;
       height: 100%;
     }
+    progress {
+      position: absolute;
+      bottom: 0;
+      width: calc(100% - 1rem);
+      z-index: 1;
+      left: 0.5rem;
+      right: 0.5rem;
+    }
   `;
 
   @property() hash = 'true';
   @property() base = '/';
+  @state() loading = false;
   @property() route = this.getCurrentRoute();
   @state() child = document.createElement('main');
   dataCache = new Map<string, any>();
@@ -104,12 +113,14 @@ export class GeneratedApp extends LitElement {
     if (oldRoute) {
       // TODO: Get delta between old and new route
     }
+  const loadingElem = document.createElement("progress");
+  this.child.appendChild(loadingElem);
+    const tree = await this.renderTree();
     // Remove children
     while (this.child.firstChild) {
       this.child.removeChild(this.child.firstChild);
     }
     // Add new children
-    const tree = await this.renderTree();
     this.child.appendChild(tree);
     this.requestUpdate();
   }

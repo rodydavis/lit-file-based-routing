@@ -4,7 +4,7 @@ import { StringBuilder } from "./string-builder";
 export function generateApp(
   sb: StringBuilder,
   components: WebComponent[],
-  options: { staticImports: boolean; cacheAll: boolean }
+  options: { staticImports: boolean; cacheAll: boolean; showLoading: boolean }
 ) {
   sb.writeln(`import { html, css, LitElement } from "lit";`);
   sb.writeln(
@@ -19,10 +19,23 @@ export function generateApp(
     "      width: 100%;",
     "      height: 100%;",
     "    }",
+    ...(options.showLoading
+      ? [
+          "    progress {",
+          "      position: absolute;",
+          "      bottom: 0;",
+          "      width: calc(100% - 1rem);",
+          "      z-index: 1;",
+          "      left: 0.5rem;",
+          "      right: 0.5rem;",
+          "    }",
+        ]
+      : []),
     "  `;",
     "",
     "  @property() hash = 'true';",
     "  @property() base = '/';",
+    ...(options.showLoading ? ["  @state() loading = false;"] : []),
     "  @property() route = this.getCurrentRoute();",
     "  @state() child = document.createElement('main');",
     "",
@@ -89,6 +102,12 @@ export function generateApp(
     "    if (oldRoute) {",
     "      // TODO: Get delta between old and new route",
     "    }",
+    ...(options.showLoading
+      ? [
+          '  const loadingElem = document.createElement("progress");',
+          "  this.child.appendChild(loadingElem);",
+        ]
+      : []),
     "    const tree = await this.renderTree();",
     "    // Remove children",
     "    while (this.child.firstChild) {",

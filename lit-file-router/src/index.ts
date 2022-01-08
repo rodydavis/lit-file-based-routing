@@ -7,6 +7,7 @@ let inputDir = "./src/pages";
 let outputFile = "./src/generated-app.ts";
 let staticImports = true;
 let cacheAll = false;
+let showLoading = false;
 
 const args = process.argv.slice(2);
 if (args.length == 0) {
@@ -30,6 +31,11 @@ if (args.length == 0) {
   if (cacheAllArg) {
     cacheAll = true;
   }
+  // Check for --show-loading=false
+  const showLoadingArg = args.find((arg) =>
+    arg.startsWith("--show-loading=true")
+  );
+  showLoading = showLoadingArg ? true : false;
   analyzePages();
 }
 
@@ -70,7 +76,7 @@ async function analyzePages() {
         const jsPath = filePath.replace(".ts", ".js");
         sb.writeln(`import "${jsPath}";`);
         c.alias = `route${i}`;
-        if(c.hasLoader) {
+        if (c.hasLoader) {
           sb.writeln(`import {loader as ${c.alias}Loader} from "${jsPath}";`);
         }
       }
@@ -79,7 +85,7 @@ async function analyzePages() {
     i++;
   }
   sb.writeln();
-  generateApp(sb, components, { staticImports, cacheAll });
+  generateApp(sb, components, { staticImports, cacheAll, showLoading });
   const output = sb.toString();
   fs.writeFileSync(outputFile, output);
 }

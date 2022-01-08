@@ -231,3 +231,11 @@ If you want to enable caching you can add the following command:
 `node lit-file-router --cache-all`
 
 It is off by default but it will cache the data from the loader function for the component and route and will pass the cached data from memory to the component.
+
+## Loading state
+
+You can pass show a progress indicator at the bottom by passing a loading arg:
+
+`node lit-file-router --show-loading=true`
+
+It is off by default, but this is useful for heavy requests that would hang the UI.

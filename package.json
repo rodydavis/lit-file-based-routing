@@ -8,7 +8,7 @@
     "serve": "vite serve",
     "start": "npm run dev",
     "prebuild": "tsc && npm run generate",
-    "generate": "node lit-file-router --dynamic-imports=true --cache-all"
+    "generate": "node lit-file-router --dynamic-imports=true --cache-all --show-loading=true"
   },
   "dependencies": {
     "lit": "^2.0.2",
