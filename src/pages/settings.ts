@@ -14,6 +14,7 @@ export class SettingsModule extends LitElement {
       flex-direction: row;
       align-items: center;
       padding-left: 10px;
+      justify-content: space-between;
     }
   `;
 
@@ -22,6 +23,7 @@ export class SettingsModule extends LitElement {
       <header>
         <menu-button></menu-button>
         <span class="title">Settings</span>
+        <div></div>
       </header>
       <slot></slot>
     </main>`;
