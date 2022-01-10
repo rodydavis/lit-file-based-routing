@@ -135,7 +135,7 @@ export function generateApp(
     "          if (noChild) elements.push(noChild);",
     "          break;",
     "        }",
-    "        elements.push(newChild!);",
+    "        if (newChild) elements.push(newChild);",
     '        const parts = _route.split("/");',
     "        parts.pop();",
     '        _route = parts.join("/");',
