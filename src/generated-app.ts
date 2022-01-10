@@ -100,12 +100,6 @@ export class GeneratedApp extends LitElement {
     window.addEventListener("hashchange", () => {
       const oldRoute = this.route;
       this.route = this.getCurrentRoute();
-      if (!this.route.endsWith("/")) {
-        const indexArgs = this.getArgsForRoute(`${ this.route}/`);
-        if (indexArgs !== null) {
-           this.route = `${ this.route}/`;
-        }
-      }
       this.updateTree(oldRoute);
     });
     this.updateTree();
@@ -115,13 +109,17 @@ export class GeneratedApp extends LitElement {
     return html` ${this.child} `;
   }
 
+  refresh() {
+    return this.updateTree();
+  }
+
   private async updateTree(oldRoute?:string) {
     this.checkForIndex();
     if (oldRoute) {
       // TODO: Get delta between old and new route
     }
-  const loadingElem = document.createElement("progress");
-  this.child.appendChild(loadingElem);
+    const loadingElem = document.createElement("progress");
+    this.child.appendChild(loadingElem);
     const tree = await this.renderTree();
     // Remove children
     while (this.child.firstChild) {
@@ -175,7 +173,7 @@ export class GeneratedApp extends LitElement {
     path: string,
     args: RegExpMatchArray | null
   ) {
-    const applyArgs = (value: string, apply: boolean, data?: any) => {
+      const applyArgs = (value: string, apply: boolean, data?: any) => {
       const elem = document.createElement(value);
       if (apply && args?.groups) {
         for (const [key, value] of Object.entries(args.groups)) {
