@@ -1,1 +1,0 @@
-import{s as p,$ as v,r as l,n as u}from"./vendor.03706caa.js";var _=Object.defineProperty,a=Object.getOwnPropertyDescriptor,O=(f,e,o,n)=>{for(var r=n>1?void 0:n?a(e,o):e,s=f.length-1,t;s>=0;s--)(t=f[s])&&(r=(n?t(e,o,r):t(r))||r);return n&&r&&_(e,o,r),r};let c=class extends p{render(){return v`Account Info`}};c.styles=l``;c=O([u("account-info")],c);export{c as AccountInfo};
