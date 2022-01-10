@@ -57,5 +57,4 @@ export function generateApp(
   }
   sb.writeln("  ]);");
   sb.writeln("}");
-  sb.writeln();
 }

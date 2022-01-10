@@ -74,4 +74,3 @@ export class GeneratedApp extends AppBase {
     }],
   ]);
 }
-
