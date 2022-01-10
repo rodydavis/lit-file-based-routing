@@ -259,7 +259,6 @@ export function generateApp(
     "  route: string,",
     "  args: { [key: string]: any }",
     ") => Promise<any>;",
-    "",
   ]);
   sb.writeln();
 }
