@@ -2,8 +2,8 @@ import{s as l,$ as d,r as f,n as c}from"./vendor.03706caa.js";var h=Object.defin
       <main>
         <aside>
           <a href="#/">Home</a>
-          <a href="#/dashboard/">Dashboard</a>
-          <a href="#/settings/">Settings</a>
+          <a href="#/dashboard">Dashboard</a>
+          <a href="#/settings">Settings</a>
         </aside>
         <section><slot></slot></section>
       </main>
