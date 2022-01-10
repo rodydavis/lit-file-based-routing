@@ -23,8 +23,10 @@ export class AppBase extends LitElement {
     window.addEventListener("hashchange", () => {
       const oldRoute = this.route;
       this.route = this.getCurrentRoute();
+      this.checkForIndex();
       this.updateTree(oldRoute);
     });
+    this.checkForIndex();
     this.updateTree();
   }
 
@@ -37,14 +39,16 @@ export class AppBase extends LitElement {
   }
 
   private async updateTree(oldRoute?: string) {
-    this.checkForIndex();
     if (oldRoute) {
       // TODO: Get delta between old and new route
     }
+
     // Remove children
     while (this.child.firstChild) {
       this.child.removeChild(this.child.firstChild);
     }
+
+    // Show loading component
     let loadingElem: HTMLElement | undefined;
     if (this.showLoading) {
       loadingElem = document.createElement("span");
@@ -55,7 +59,7 @@ export class AppBase extends LitElement {
     // Render the new tree of components
     const tree = await this.renderTree();
 
-    if (this.showLoading) loadingElem?.remove();
+    if (this.showLoading && loadingElem) loadingElem.remove();
 
     // Add new children
     if (tree) this.child.appendChild(tree);
@@ -67,7 +71,7 @@ export class AppBase extends LitElement {
     const args = this.getArgsForRoute(_route);
     const elements: Element[] = [];
     if (_route !== "/") {
-        // Build up the element array for each part of the url
+      // Build up the element array for each part of the url
       while (_route.length > 0) {
         const newChild = await this.getComponent(_route, args);
         if (!newChild && _route === this.route) {
@@ -127,9 +131,9 @@ export class AppBase extends LitElement {
           await value.loadImport();
           return applyArgs(value.component, hasArgs, data);
         }
-        const getLoader = await value.loadData();
-        if (getLoader) {
-          const componentData = await getLoader(
+        const loader = await value.loadData();
+        if (loader) {
+          const componentData = await loader(
             this.route,
             args ? Object(args)["groups"] : {}
           );
@@ -138,9 +142,10 @@ export class AppBase extends LitElement {
           }
           await value.loadImport();
           return applyArgs(value.component, hasArgs, componentData);
+        } else {
+          await value.loadImport();
+          return applyArgs(value.component, hasArgs);
         }
-        await value.loadImport();
-        return applyArgs(value.component, hasArgs);
       }
     }
     return null;
@@ -159,7 +164,8 @@ export class AppBase extends LitElement {
     if (this.route.endsWith("/")) return;
     const indexArgs = this.getArgsForRoute(`${this.route}/`);
     if (indexArgs !== null) {
-      location.hash = `#${this.route}/`;
+      this.route = `${this.route}/`;
+      location.hash = `#${this.route}`;
     }
   }
 

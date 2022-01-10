@@ -60,9 +60,6 @@ async function analyzePages() {
   // sb.writeln("// @ts-nocheck");
   // sb.writeln();
   let i = 0;
-  if (staticImports) {
-    sb.writeln(`// Page Routes`);
-  }
   const components: WebComponent[] = [];
   const pages: { path: string; content: string }[] = [];
   readPagesDirectory(inputDir, pages);
@@ -76,15 +73,12 @@ async function analyzePages() {
         const jsPath = filePath.replace(".ts", ".js");
         c.alias = `route${i}`;
         sb.writeln(`import * as ${c.alias} from "${jsPath}";`);
-        // if (c.hasLoader) {
-        //   sb.writeln(`import {loader as ${c.alias}Loader} from "${jsPath}";`);
-        // }
       }
       components.push(c);
     }
     i++;
   }
-  sb.writeln();
+  if (staticImports) sb.writeln();
   generateApp(sb, components, { staticImports, cacheAll, showLoading });
   const output = sb.toString();
   fs.writeFileSync(outputFile, output);

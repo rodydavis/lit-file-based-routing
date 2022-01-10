@@ -1,4 +1,3 @@
-
 import { customElement } from "lit/decorators.js";
 import { AppBase, Route } from "lit-file-router/src/app-base.js";
 
