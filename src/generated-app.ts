@@ -1,3 +1,4 @@
+
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
@@ -18,120 +19,81 @@ export class GeneratedApp extends LitElement {
     }
   `;
 
-  @property() hash = "true";
-  @property() base = "/";
+  @property() hash = 'true';
+  @property() base = '/';
   @state() loading = false;
   @property() route = this.getCurrentRoute();
-  @state() child = document.createElement("main");
+  @state() child = document.createElement('main');
   dataCache = new Map<string, any>();
   components: Map<string, Route> = new Map([
-    [
-      "/404",
-      {
-        component: "unknown-route",
-        loadData: async () => null,
-        loadImport: () => import("./pages/404.js"),
+   ["/404", {
+      component: "unknown-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/404.js"),
+    }],
+   ["/custom/not/nested/route", {
+      component: "custom-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/custom.not.nested.route.js"),
+    }],
+   ["/dashboard/account/:id", {
+      component: "account-details",
+      loadData: async () => {
+        const {loader} = await import("./pages/dashboard/account/:id.js");
+        return loader;
       },
-    ],
-    [
-      "/custom/not/nested/route",
-      {
-        component: "custom-route",
-        loadData: async () => null,
-        loadImport: () => import("./pages/custom.not.nested.route.js"),
-      },
-    ],
-    [
-      "/dashboard/account/:id",
-      {
-        component: "account-details",
-        loadData: async () => {
-          const { loader } = await import("./pages/dashboard/account/:id.js");
-          return loader;
-        },
-        loadImport: () => import("./pages/dashboard/account/:id.js"),
-      },
-    ],
-    [
-      "/dashboard/account/",
-      {
-        component: "account-info",
-        loadData: async () => null,
-        loadImport: () => import("./pages/dashboard/account/index.js"),
-      },
-    ],
-    [
-      "/dashboard/account",
-      {
-        component: "account-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/dashboard/account.js"),
-      },
-    ],
-    [
-      "/dashboard/",
-      {
-        component: "dashboard-default",
-        loadData: async () => null,
-        loadImport: () => import("./pages/dashboard/index.js"),
-      },
-    ],
-    [
-      "/dashboard/overview",
-      {
-        component: "overview-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/dashboard/overview.js"),
-      },
-    ],
-    [
-      "/dashboard",
-      {
-        component: "dashboard-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/dashboard.js"),
-      },
-    ],
-    [
-      "/",
-      {
-        component: "app-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/index.js"),
-      },
-    ],
-    [
-      "",
-      {
-        component: "root-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/root.js"),
-      },
-    ],
-    [
-      "/settings/admin",
-      {
-        component: "admin-settings",
-        loadData: async () => null,
-        loadImport: () => import("./pages/settings/admin.js"),
-      },
-    ],
-    [
-      "/settings/",
-      {
-        component: "settings-default",
-        loadData: async () => null,
-        loadImport: () => import("./pages/settings/index.js"),
-      },
-    ],
-    [
-      "/settings",
-      {
-        component: "settings-module",
-        loadData: async () => null,
-        loadImport: () => import("./pages/settings.js"),
-      },
-    ],
+      loadImport: () => import("./pages/dashboard/account/:id.js"),
+    }],
+   ["/dashboard/account/", {
+      component: "account-info",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/account/index.js"),
+    }],
+   ["/dashboard/account", {
+      component: "account-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/account.js"),
+    }],
+   ["/dashboard/", {
+      component: "dashboard-default",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/index.js"),
+    }],
+   ["/dashboard/overview", {
+      component: "overview-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/overview.js"),
+    }],
+   ["/dashboard", {
+      component: "dashboard-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard.js"),
+    }],
+   ["/", {
+      component: "app-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/index.js"),
+    }],
+   ["", {
+      component: "root-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/root.js"),
+    }],
+   ["/settings/admin", {
+      component: "admin-settings",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings/admin.js"),
+    }],
+   ["/settings/", {
+      component: "settings-default",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings/index.js"),
+    }],
+   ["/settings", {
+      component: "settings-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings.js"),
+    }],
   ]);
 
   firstUpdated() {
@@ -153,56 +115,68 @@ export class GeneratedApp extends LitElement {
     return html` ${this.child} `;
   }
 
-  private async updateTree(oldRoute?: string) {
+  private async updateTree(oldRoute?:string) {
+    this.checkForIndex();
     if (oldRoute) {
       // TODO: Get delta between old and new route
     }
-    const loadingElem = document.createElement("progress");
-    this.child.appendChild(loadingElem);
+  const loadingElem = document.createElement("progress");
+  this.child.appendChild(loadingElem);
     const tree = await this.renderTree();
     // Remove children
     while (this.child.firstChild) {
       this.child.removeChild(this.child.firstChild);
     }
     // Add new children
-    this.child.appendChild(tree);
+    if (tree) this.child.appendChild(tree);
     this.requestUpdate();
   }
 
   private async renderTree() {
-    let child: Element = document.createElement("div");
     let _route = this.route;
     const args = this.getArgsForRoute(_route);
+    const elements: Element[] = [];
     if (_route !== "/") {
       while (_route.length > 0) {
-        const newChild = await this.getComponent(_route, child, args);
-        if (newChild === child && _route === this.route) {
-          child = await this.getComponent("/404", child, args);
+        const newChild = await this.getComponent(_route, args);
+        if (!newChild && _route === this.route) {
+          const noChild = await this.getComponent("/404", args);
+          if (noChild) elements.push(noChild);
           break;
         }
-        child = newChild;
+        elements.push(newChild!);
         const parts = _route.split("/");
         parts.pop();
         _route = parts.join("/");
         if (_route === "/") break;
       }
     } else if (_route === "/") {
-      child = await this.getComponent("/", child, args);
+      const indexChild = await this.getComponent("/", args);
+      if (indexChild) elements.push(indexChild);
     } else {
-      child = await this.getComponent("/404", child, args);
+      const noChild = await this.getComponent("/404", args);
+      if (noChild) elements.push(noChild);
     }
-    child = await this.getComponent("", child, args);
-    return child;
+    const rootChild = await this.getComponent("", args);
+    if (rootChild) elements.push(rootChild);
+    let idx = elements.length - 1;
+    while (idx >= 1) {
+      const parent = elements[idx];
+      const child = elements[idx - 1];
+      if (child && parent) {
+        parent.appendChild(child);
+      }
+      idx--;
+    }
+    return elements.pop();
   }
 
   private async getComponent(
     path: string,
-    child: Element,
     args: RegExpMatchArray | null
   ) {
     const applyArgs = (value: string, apply: boolean, data?: any) => {
       const elem = document.createElement(value);
-      elem.appendChild(child);
       if (apply && args?.groups) {
         for (const [key, value] of Object.entries(args.groups)) {
           elem.setAttribute(key, value);
@@ -222,10 +196,7 @@ export class GeneratedApp extends LitElement {
         }
         const getLoader = await value.loadData();
         if (getLoader) {
-          const componentData = await getLoader(
-            this.route,
-            args ? Object(args)["groups"] : {}
-          );
+          const componentData = await getLoader(this.route, args ? Object(args)['groups'] : {});
           this.dataCache.set(cacheKey, componentData);
           await value.loadImport();
           return applyArgs(value.component, hasArgs, componentData);
@@ -234,7 +205,7 @@ export class GeneratedApp extends LitElement {
         return applyArgs(value.component, hasArgs);
       }
     }
-    return child;
+    return null;
   }
 
   private getArgsForRoute(route: string): RegExpMatchArray | null {
@@ -245,15 +216,23 @@ export class GeneratedApp extends LitElement {
     return null;
   }
 
-  private getCurrentRoute() {
-    let route = "/";
-    if (this.hash === "true" && window.location.hash.length > 0) {
-      route = window.location.hash.slice(1);
-    } else if (this.hash === "false") {
-      const baseUrl = this.getAttribute("base") ?? "";
-      route = window.location.pathname.slice(baseUrl.length);
+  private checkForIndex() {
+    if (this.route === "" || this.route === "/") location.hash = "#/";
+    if (this.route.endsWith("/")) return;
+    const indexArgs = this.getArgsForRoute(`${this.route}/`);
+    if (indexArgs !== null) {
+      location.hash = `#${this.route}/`;
     }
-    if (route === "" || route === "/") location.hash = "#/";
+  }
+
+  private getCurrentRoute() {
+  let route = "/";
+  if (this.hash === "true" && window.location.hash.length > 0) {
+    route = window.location.hash.slice(1);
+  } else if (this.hash === "false") {
+    const baseUrl = this.getAttribute("base") ?? "";
+    route = window.location.pathname.slice(baseUrl.length);
+  }
     console.debug(`current route: ${route}`);
     return route;
   }
@@ -281,3 +260,4 @@ type RouteLoader = (
   route: string,
   args: { [key: string]: any }
 ) => Promise<any>;
+
