@@ -63,7 +63,7 @@ export function generateApp(
     if (component.hasLoader) {
       if (options.staticImports) {
         sb.writeln(`      loadData: async () => {
-        return ${component.alias}Loader;
+        return ${component.alias}.loader;
       },`);
       } else {
         sb.writeln(`      loadData: async () => {
@@ -75,7 +75,7 @@ export function generateApp(
       sb.writeln(`      loadData: async () => null,`);
     }
     if (options.staticImports) {
-      sb.writeln(`      loadImport: async () => {},
+      sb.writeln(`      loadImport: async () => ${component.alias},
     }],`);
     } else {
       sb.writeln(`      loadImport: () => import("${componentImportPath}"),
@@ -89,6 +89,12 @@ export function generateApp(
     '    window.addEventListener("hashchange", () => {',
     "      const oldRoute = this.route;",
     "      this.route = this.getCurrentRoute();",
+    '      if (!this.route.endsWith("/")) {',
+    "        const indexArgs = this.getArgsForRoute(`${ this.route}/`);",
+    "        if (indexArgs !== null) {",
+    "           this.route = `${ this.route}/`;",
+    "        }",
+    "      }",
     "      this.updateTree(oldRoute);",
     "    });",
     "    this.updateTree();",
@@ -200,16 +206,16 @@ export function generateApp(
     "  }",
     "",
     "  private getCurrentRoute() {",
-    '    let route = "/";',
-    "    if (this.hash ==='true' && window.location.hash.length > 0) {",
-    "      route = window.location.hash.slice(1);",
-    "    } else {",
-    "      const baseUrl = this.getAttribute('base') ?? '';",
-    "      route = window.location.pathname.slice(baseUrl.length);",
-    "    }",
-    "    if (route == '') route = '/';",
-    "    console.debug(`current route: ${route}`);",
-    "    return route;",
+    'let route = "/";',
+    'if (this.hash === "true" && window.location.hash.length > 0) {',
+    "       route = window.location.hash.slice(1);",
+    '} else if (this.hash === "false") {',
+    '  const baseUrl = this.getAttribute("base") ?? "";',
+    "       route = window.location.pathname.slice(baseUrl.length);",
+    "     }",
+    'if (route === "" || route === "/") location.hash = "#/";',
+    "     console.debug(`current route: ${route}`);",
+    "     return route;",
     "  }",
     "}",
     "",

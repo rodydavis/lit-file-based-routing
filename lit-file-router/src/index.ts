@@ -74,11 +74,11 @@ async function analyzePages() {
       if (staticImports) {
         const filePath = path.replace("./src/", "./");
         const jsPath = filePath.replace(".ts", ".js");
-        sb.writeln(`import "${jsPath}";`);
         c.alias = `route${i}`;
-        if (c.hasLoader) {
-          sb.writeln(`import {loader as ${c.alias}Loader} from "${jsPath}";`);
-        }
+        sb.writeln(`import * as ${c.alias} from "${jsPath}";`);
+        // if (c.hasLoader) {
+        //   sb.writeln(`import {loader as ${c.alias}Loader} from "${jsPath}";`);
+        // }
       }
       components.push(c);
     }
