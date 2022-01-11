@@ -3,9 +3,9 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("admin-settings")
 export class AdminSettings extends LitElement {
-  static styles = css``;
+  static override styles = css``;
 
-  render() {
+  override render() {
     return html`Admin Settings`;
   }
 }

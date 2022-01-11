@@ -16,12 +16,12 @@ export async function loader(
 
 @customElement("account-details")
 export class AccountDetails extends LitElement {
-  static styles = css``;
+  static override styles = css``;
 
-  @property({ type: String }) id = "";
+  @property({ type: String }) override id = "";
   @property({ type: Object }) data!: AccountData;
 
-  render() {
+  override render() {
     return html`<section>${this.data.name}</section>`;
   }
 }

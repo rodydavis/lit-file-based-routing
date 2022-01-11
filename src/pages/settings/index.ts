@@ -3,9 +3,9 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("settings-default")
 export class SettingsDefault extends LitElement {
-  static styles = css``;
+  static override styles = css``;
 
-  render() {
+  override render() {
     return html`<section>Default Settings</section>`;
   }
 }

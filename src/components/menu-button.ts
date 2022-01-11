@@ -3,9 +3,9 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("menu-button")
 export class MenuButton extends LitElement {
-  static styles = css``;
+  static override styles = css``;
 
-  render() {
-    return html` <button @click=${() => alert('Menu Toggle')}>Menu</button> `;
+  override render() {
+    return html` <button @click=${() => alert("Menu Toggle")}>Menu</button> `;
   }
 }

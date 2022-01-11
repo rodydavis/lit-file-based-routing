@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("app-module")
 export class AppModule extends LitElement {
-  static styles = css`
+  static override styles = css`
     header {
       height: 40px;
       background-color: navy;
@@ -15,7 +15,7 @@ export class AppModule extends LitElement {
     }
   `;
 
-  render() {
+  override render() {
     return html` <main>
       <header>App Base</header>
       <slot></slot>

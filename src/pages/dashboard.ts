@@ -5,7 +5,7 @@ import '../components/menu-button.js';
 
 @customElement("dashboard-module")
 export class DashboardModule extends LitElement {
-  static styles = css`
+  static override styles = css`
     header {
       height: 40px;
       background-color: orange;
@@ -19,7 +19,7 @@ export class DashboardModule extends LitElement {
     }
   `;
 
-  render() {
+  override render() {
     return html`<main>
       <header>
         <menu-button></menu-button>

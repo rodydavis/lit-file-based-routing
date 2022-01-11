@@ -1,0 +1,127 @@
+{
+  "components": [
+    {
+      "name": "unknown-route",
+      "path": "./src/pages/404.ts",
+      "hasLoader": false,
+      "route": "/404",
+      "args": [],
+      "implicitIndex": false,
+      "parentRoute": ""
+    },
+    {
+      "name": "custom-route",
+      "path": "./src/pages/custom.not.nested.route.ts",
+      "hasLoader": false,
+      "route": "/custom/not/nested/route",
+      "args": [],
+      "implicitIndex": false
+    },
+    {
+      "name": "account-details",
+      "path": "./src/pages/dashboard/account/:id.ts",
+      "hasLoader": true,
+      "route": "/dashboard/account/:id",
+      "args": [
+        "id"
+      ],
+      "implicitIndex": false,
+      "parentRoute": "/dashboard/account/"
+    },
+    {
+      "name": "account-info",
+      "path": "./src/pages/dashboard/account/index.ts",
+      "hasLoader": false,
+      "route": "/dashboard/account/",
+      "args": [],
+      "parentRoute": "/dashboard/account"
+    },
+    {
+      "name": "account-module",
+      "path": "./src/pages/dashboard/account.ts",
+      "hasLoader": false,
+      "route": "/dashboard/account",
+      "args": [],
+      "implicitIndex": true,
+      "parentRoute": "/dashboard/"
+    },
+    {
+      "name": "dashboard-default",
+      "path": "./src/pages/dashboard/index.ts",
+      "hasLoader": false,
+      "route": "/dashboard/",
+      "args": [],
+      "parentRoute": "/dashboard"
+    },
+    {
+      "name": "overview-module",
+      "path": "./src/pages/dashboard/overview.ts",
+      "hasLoader": false,
+      "route": "/dashboard/overview",
+      "args": [],
+      "implicitIndex": false,
+      "parentRoute": "/dashboard/"
+    },
+    {
+      "name": "dashboard-module",
+      "path": "./src/pages/dashboard.ts",
+      "hasLoader": false,
+      "route": "/dashboard",
+      "args": [],
+      "implicitIndex": true,
+      "parentRoute": ""
+    },
+    {
+      "name": "app-module",
+      "path": "./src/pages/index.ts",
+      "hasLoader": false,
+      "route": "/",
+      "args": [],
+      "parentRoute": ""
+    },
+    {
+      "name": "root-module",
+      "path": "./src/pages/root.ts",
+      "hasLoader": false,
+      "route": "",
+      "args": []
+    },
+    {
+      "name": "admin-settings",
+      "path": "./src/pages/settings/admin.ts",
+      "hasLoader": false,
+      "route": "/settings/admin",
+      "args": [],
+      "implicitIndex": false,
+      "parentRoute": "/settings/"
+    },
+    {
+      "name": "settings-default",
+      "path": "./src/pages/settings/index.ts",
+      "hasLoader": false,
+      "route": "/settings/",
+      "args": [],
+      "parentRoute": "/settings"
+    },
+    {
+      "name": "settings-module",
+      "path": "./src/pages/settings.ts",
+      "hasLoader": false,
+      "route": "/settings",
+      "args": [],
+      "implicitIndex": true,
+      "parentRoute": ""
+    },
+    {
+      "name": "test-module",
+      "path": "./src/pages/test.:page.multiple.:args.ts",
+      "hasLoader": false,
+      "route": "/test/:page/multiple/:args",
+      "args": [
+        "page",
+        "args"
+      ],
+      "implicitIndex": false
+    }
+  ]
+}

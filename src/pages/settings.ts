@@ -5,7 +5,7 @@ import "../components/menu-button.js";
 
 @customElement("settings-module")
 export class SettingsModule extends LitElement {
-  static styles = css`
+  static override styles = css`
     header {
       height: 40px;
       background-color: black;
@@ -18,7 +18,7 @@ export class SettingsModule extends LitElement {
     }
   `;
 
-  render() {
+  override render() {
     return html` <main>
       <header>
         <menu-button></menu-button>

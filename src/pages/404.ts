@@ -3,9 +3,9 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("unknown-route")
 export class UnknownRoute extends LitElement {
-  static styles = css``;
+  static override styles = css``;
 
-  render() {
+  override render() {
     return html` <main>
       <header>404</header>
     </main>`;

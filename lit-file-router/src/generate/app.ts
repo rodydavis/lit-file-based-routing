@@ -1,15 +1,21 @@
-import { WebComponent } from "./analyze-page";
-import { StringBuilder } from "./string-builder";
+import { WebComponent } from "../analyze-page.js";
+import { StringBuilder } from "../string-builder.js";
 
 export function generateApp(
-  sb: StringBuilder,
   components: WebComponent[],
   options: { staticImports: boolean; cacheAll: boolean; showLoading: boolean }
 ) {
+  const sb = new StringBuilder();
   sb.writeln(`import { customElement } from "lit/decorators.js";`);
   sb.writeln(
     `import { AppBase, Route } from "lit-file-router/src/app-base.js";`
   );
+  sb.writeln();
+  if (options.staticImports) {
+    for (const c of components) {
+      sb.writeln(`import * as ${c.alias} from "${c.relativePath}";`);
+    }
+  }
   sb.writeln();
   sb.writeAll([
     '@customElement("generated-app")',
@@ -30,9 +36,6 @@ export function generateApp(
     // sb.writeln(`   ["${path}", "${component.name}"],`);]
     sb.writeln(`   ["${path}", {
       component: "${component.name}",`);
-    const componentImportPath = component.path
-      .replace("./src/", "./")
-      .replace(".ts", ".js");
     if (component.hasLoader) {
       if (options.staticImports) {
         sb.writeln(`      loadData: async () => {
@@ -40,7 +43,7 @@ export function generateApp(
       },`);
       } else {
         sb.writeln(`      loadData: async () => {
-        const {loader} = await import("${componentImportPath}");
+        const {loader} = await import("${component.relativePath}");
         return loader;
       },`);
       }
@@ -51,10 +54,11 @@ export function generateApp(
       sb.writeln(`      loadImport: async () => ${component.alias},
     }],`);
     } else {
-      sb.writeln(`      loadImport: () => import("${componentImportPath}"),
+      sb.writeln(`      loadImport: () => import("${component.relativePath}"),
     }],`);
     }
   }
   sb.writeln("  ]);");
   sb.writeln("}");
+  return sb.toString();
 }

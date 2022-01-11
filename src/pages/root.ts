@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("root-module")
 export class RootModule extends LitElement {
-  static styles = css`
+  static override styles = css`
     main {
       display: flex;
       flex-direction: row;
@@ -21,7 +21,7 @@ export class RootModule extends LitElement {
     }
   `;
 
-  render() {
+  override render() {
     return html`
       <main>
         <aside>

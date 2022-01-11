@@ -13,6 +13,23 @@ export function analyzePage(path: string, content: string): WebComponent[] {
       break;
     }
   }
+
+  const route = path
+    .replace("./src/pages/", "/")
+    .replace(".ts", ".js")
+    .replace(".js", "")
+    .split(".")
+    .join("/")
+    .replace("/index", "/")
+    .replace("/root", "");
+
+  const args: string[] = [];
+  for (const part of route.split("/")) {
+    if (part.startsWith(":")) {
+      args.push(part.slice(1));
+    }
+  }
+
   // Look for @customElement decorator and get the value
   const regex = /@customElement\("([^"]+)"\)/g;
   const matches = content.match(regex);
@@ -25,6 +42,8 @@ export function analyzePage(path: string, content: string): WebComponent[] {
           name,
           path,
           hasLoader,
+          route,
+          args,
         });
       }
     }
@@ -41,10 +60,26 @@ export function analyzePage(path: string, content: string): WebComponent[] {
           name,
           path,
           hasLoader,
+          route,
+          args,
         });
       }
     }
   }
+
+  // Get class exports
+  const regex3 = /export class ([^ ]+)/g;
+  const matches3 = content.match(regex3);
+  if (matches3) {
+    for (const match of matches3) {
+      const result = match.match(/export class ([^ ]+)/);
+      if (result) {
+        const name = result[1];
+        console.log(`Found class ${name}`);
+      }
+    }
+  }
+
   return components;
 }
 
@@ -52,5 +87,10 @@ export interface WebComponent {
   name: string;
   path: string;
   alias?: string;
+  relativePath?: string;
   hasLoader: boolean;
+  route: string;
+  args: string[];
+  implicitIndex?: boolean;
+  parentRoute?: string;
 }

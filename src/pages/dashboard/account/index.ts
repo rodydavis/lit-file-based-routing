@@ -3,13 +3,13 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("account-info")
 export class AccountInfo extends LitElement {
-  static styles = css`
+  static override styles = css`
     article {
       padding: 16px;
     }
   `;
 
-  render() {
+  override render() {
     return html`<article>
       <h3>Account Info</h3>
       <ul>
