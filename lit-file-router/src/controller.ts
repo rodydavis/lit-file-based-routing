@@ -2,6 +2,7 @@ import type { TemplateResult } from "lit";
 import { html, literal } from "lit/static-html.js";
 import { StringBuilder } from "./string-builder.js";
 import { unsafeStatic } from "lit/static-html.js";
+import { fixRegex } from "./utils.js";
 
 export class ComponentController {
   cacheAll = false;
@@ -119,18 +120,6 @@ export class ComponentController {
     }
     return null;
   }
-}
-
-function fixRegex(route: string): RegExp {
-  const variableRegex = "[a-zA-Z0-9_-]+";
-  const nameWithParameters = route.replace(
-    new RegExp(`:(${variableRegex})`),
-    (match) => {
-      const groupName = match.slice(1);
-      return `(?<${groupName}>[a-zA-Z0-9_\\-.,:;+*^%$@!]+)`;
-    }
-  );
-  return new RegExp(`^${nameWithParameters}$`);
 }
 
 export interface Route {

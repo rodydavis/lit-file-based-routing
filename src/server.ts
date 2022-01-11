@@ -1,357 +1,305 @@
 import "@lit-labs/ssr/lib/install-global-dom-shim.js";
-window.global = window;
-document.getElementsByTagName = () => [] as any;
+import "@lit-labs/ssr/lib/render-lit-html.js";
+import { LitElementRenderer } from "@lit-labs/ssr/lib/lit-element-renderer.js";
+
+import "./pages/404.js";
+import "./pages/custom.not.nested.route.js";
+import "./pages/dashboard/account/:id.js";
+import { loader as route2Loader } from "./pages/dashboard/account/:id.js";
+import "./pages/dashboard/account/index.js";
+import "./pages/dashboard/account.js";
+import "./pages/dashboard/index.js";
+import "./pages/dashboard/overview.js";
+import "./pages/dashboard.js";
+import "./pages/index.js";
+import "./pages/root.js";
+import "./pages/settings/admin.js";
+import "./pages/settings/index.js";
+import "./pages/settings.js";
+import "./pages/test.:page.multiple.:args.js";
 
 import express from "express";
-import { html } from "lit";
-import { render } from "@lit-labs/ssr/lib/render-with-global-dom-shim.js";
 
 const app = express();
 const port = 3000;
 
-app.use("/test/:page/multiple/:args", (req, res) => {
-  const args = Object(req.params);
-  const template = html`<root-module>
-    <test-module page="${args["page"]}" args="${args["args"]}"> </test-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>test-module</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/test.:page.multiple.:args.js";
+interface Route {
+  tag: string;
+  loader?: any;
+  hasImplicitIndex: boolean;
+  parentRoute?: string;
+}
 
-       </script>
-     </body>
-   </html>
-   `);
-});
-app.use("/settings/admin", (_req, res) => {
-  const template = html`<root-module>
-    <settings-module>
-      <settings-default>
-        <admin-settings> </admin-settings>
-      </settings-default>
-    </settings-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>admin-settings</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/settings/admin.js";
-import "./pages/settings/index.js";
-import "./pages/settings.js";
+const components = new Map<string, Route>([
+  [
+    "/test/:page/multiple/:args",
+    {
+      tag: "test-module",
+      hasImplicitIndex: false,
+    },
+  ],
+  [
+    "/settings/admin",
+    {
+      tag: "admin-settings",
+      hasImplicitIndex: false,
+      parentRoute: "/settings/",
+    },
+  ],
+  [
+    "/settings/",
+    {
+      tag: "settings-default",
+      hasImplicitIndex: false,
+      parentRoute: "/settings",
+    },
+  ],
+  [
+    "/settings",
+    {
+      tag: "settings-module",
+      hasImplicitIndex: true,
+    },
+  ],
+  [
+    "/dashboard/overview",
+    {
+      tag: "overview-module",
+      hasImplicitIndex: false,
+      parentRoute: "/dashboard/",
+    },
+  ],
+  [
+    "/dashboard/account/:id",
+    {
+      tag: "account-details",
+      loader: route2Loader,
+      hasImplicitIndex: false,
+      parentRoute: "/dashboard/account/",
+    },
+  ],
+  [
+    "/dashboard/account/",
+    {
+      tag: "account-info",
+      hasImplicitIndex: false,
+      parentRoute: "/dashboard/account",
+    },
+  ],
+  [
+    "/dashboard/account",
+    {
+      tag: "account-module",
+      hasImplicitIndex: true,
+      parentRoute: "/dashboard/",
+    },
+  ],
+  [
+    "/dashboard/",
+    {
+      tag: "dashboard-default",
+      hasImplicitIndex: false,
+      parentRoute: "/dashboard",
+    },
+  ],
+  [
+    "/dashboard",
+    {
+      tag: "dashboard-module",
+      hasImplicitIndex: true,
+    },
+  ],
+  [
+    "/custom/not/nested/route",
+    {
+      tag: "custom-route",
+      hasImplicitIndex: false,
+    },
+  ],
+  [
+    "/404",
+    {
+      tag: "unknown-route",
+      hasImplicitIndex: false,
+    },
+  ],
+  [
+    "/",
+    {
+      tag: "app-module",
+      hasImplicitIndex: false,
+    },
+  ],
+  [
+    "",
+    {
+      tag: "root-module",
+      hasImplicitIndex: false,
+    },
+  ],
+]);
 
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/test/:page/multiple/:args", async (req, res) => {
+  const contents = await renderTree("/test/:page/multiple/:args", req.params);
+  res.send(contents);
 });
-app.use("/settings/", (_req, res) => {
-  const template = html`<root-module>
-    <settings-module>
-      <settings-default> </settings-default>
-    </settings-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>settings-default</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/settings/index.js";
-import "./pages/settings.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/settings/admin", async (req, res) => {
+  const contents = await renderTree("/settings/admin", req.params);
+  res.send(contents);
 });
-app.use("/settings", (_req, res) => {
-  const template = html`<root-module>
-    <settings-module> </settings-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>settings-module</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/settings.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/settings/", async (req, res) => {
+  const contents = await renderTree("/settings/", req.params);
+  res.send(contents);
 });
-app.use("/dashboard/overview", (_req, res) => {
-  const template = html`<root-module>
-    <dashboard-module>
-      <dashboard-default>
-        <overview-module> </overview-module>
-      </dashboard-default>
-    </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>overview-module</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard/overview.js";
-import "./pages/dashboard/index.js";
-import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/settings", async (req, res) => {
+  const contents = await renderTree("/settings", req.params);
+  res.send(contents);
 });
-app.use("/dashboard/account/:id", (req, res) => {
-  const args = Object(req.params);
-  const template = html`<root-module>
-    <dashboard-module>
-      <dashboard-default>
-        <account-module>
-          <account-info>
-            <account-details id="${args["id"]}"> </account-details>
-          </account-info>
-        </account-module>
-      </dashboard-default>
-    </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>account-details</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard/account/:id.js";
-import "./pages/dashboard/account/index.js";
-import "./pages/dashboard/account.js";
-import "./pages/dashboard/index.js";
-import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard/overview", async (req, res) => {
+  const contents = await renderTree("/dashboard/overview", req.params);
+  res.send(contents);
 });
-app.use("/dashboard/account/", (_req, res) => {
-  const template = html`<root-module>
-    <dashboard-module>
-      <dashboard-default>
-        <account-module>
-          <account-info> </account-info>
-        </account-module>
-      </dashboard-default>
-    </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>account-info</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard/account/index.js";
-import "./pages/dashboard/account.js";
-import "./pages/dashboard/index.js";
-import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard/account/:id", async (req, res) => {
+  const contents = await renderTree("/dashboard/account/:id", req.params);
+  res.send(contents);
 });
-app.use("/dashboard/account", (_req, res) => {
-  const template = html`<root-module>
-    <dashboard-module>
-      <dashboard-default>
-        <account-module> </account-module>
-      </dashboard-default>
-    </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>account-module</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard/account.js";
-import "./pages/dashboard/index.js";
-import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard/account/", async (req, res) => {
+  const contents = await renderTree("/dashboard/account/", req.params);
+  res.send(contents);
 });
-app.use("/dashboard/", (_req, res) => {
-  const template = html`<root-module>
-    <dashboard-module>
-      <dashboard-default> </dashboard-default>
-    </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>dashboard-default</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard/index.js";
-import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard/account", async (req, res) => {
+  const contents = await renderTree("/dashboard/account", req.params);
+  res.send(contents);
 });
-app.use("/dashboard", (_req, res) => {
-  const template = html`<root-module>
-    <dashboard-module> </dashboard-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>dashboard-module</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/dashboard.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard/", async (req, res) => {
+  const contents = await renderTree("/dashboard/", req.params);
+  res.send(contents);
 });
-app.use("/custom/not/nested/route", (_req, res) => {
-  const template = html`<root-module>
-    <custom-route> </custom-route>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>custom-route</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/custom.not.nested.route.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/dashboard", async (req, res) => {
+  const contents = await renderTree("/dashboard", req.params);
+  res.send(contents);
 });
-app.use("/404", (_req, res) => {
-  const template = html`<root-module>
-    <unknown-route> </unknown-route>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>unknown-route</title>
-     </head>
-     <body>
-       ${code}
-       <script type="module">
-          import "./pages/404.js";
-
-       </script>
-     </body>
-   </html>
-   `);
+app.get("/custom/not/nested/route", async (req, res) => {
+  const contents = await renderTree("/custom/not/nested/route", req.params);
+  res.send(contents);
 });
-app.use("/", (_req, res) => {
-  const template = html`<root-module>
-    <app-module> </app-module>
-  </root-module>`;
-  const ssrResult = render(template);
-  const code = Array.from(ssrResult).join("");
-  res.send(`
-   <!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8' />
-       <title>app-module</title>
-     </head>
-     <body>
-       ${code}
-     </body>
-   </html>
-   `);
+app.get("/404", async (req, res) => {
+  const contents = await renderTree("/404", req.params);
+  res.send(contents);
+});
+app.get("/", async (req, res) => {
+  const contents = await renderTree("/", req.params);
+  res.send(contents);
 });
 
+async function renderTree(route: string, args: { [key: string]: any }) {
+  let _route = route;
+  let component = getComponent(_route);
+  if (component && component.hasImplicitIndex) {
+    _route += "/";
+    component = getComponent(_route)!;
+  }
+  let child = undefined;
+
+  while (component) {
+    let data = undefined;
+    const routeArgs = _route === route ? args : {};
+    if (component.loader) data = await component.loader(_route, routeArgs);
+    child = renderComponent(component.tag, routeArgs, child, data);
+    _route = component.parentRoute || "";
+    if (_route === "") break;
+    component = getComponent(_route);
+  }
+
+  const root = getComponent("");
+  if (root) {
+    let data = undefined;
+    if (root.loader) data = await root.loader(_route, args);
+    child = renderComponent(root.tag, args, child, data);
+  }
+
+  return child || "";
+}
+
+function renderComponent(
+  tag: string,
+  args: { [key: string]: any },
+  child: string | undefined,
+  data: any | undefined
+) {
+  const sb: string[] = [];
+  const instance = new LitElementRenderer(tag);
+  const element = customElements.get(tag) || null;
+  sb.push(`<${tag} `);
+
+  for (let [name, value] of Object.entries(args)) {
+    if (name in element?.prototype) {
+      instance.setProperty(name, value);
+    } else {
+      instance.setAttribute(name, value);
+    }
+  }
+  if (data) instance.setProperty("data", data);
+  instance.connectedCallback();
+  const attributes = Array.from(instance.renderAttributes()).join(" ");
+  sb.push(`${attributes}`);
+  sb.push(">");
+
+  const shadowContents = instance.renderShadow({} as any);
+  if (shadowContents !== undefined) {
+    const shadow = Array.from(shadowContents).join(" ");
+    sb.push('<template shadowroot="open">');
+    sb.push(shadow);
+    sb.push("</template>");
+  }
+  if (child) {
+    sb.push(child);
+  }
+
+  sb.push(`</${tag}>`);
+  return renderHtml(sb.join("\n"));
+}
+
+function getComponent(route: string) {
+  for (const key of Array.from(components.keys())) {
+    const regMatch = route.match(fixRegex(key));
+    if (regMatch !== null) return components.get(key)!;
+    if (key === route) return components.get(key)!;
+  }
+}
+
+function fixRegex(route: string): RegExp {
+  const variableRegex = "[a-zA-Z0-9_-]+";
+  const nameWithParameters = route.replace(
+    new RegExp(`:(${variableRegex})`),
+    (match) => {
+      const groupName = match.slice(1);
+      return `(?<${groupName}>[a-zA-Z0-9_\\-.,:;+*^%$@!]+)`;
+    }
+  );
+  return new RegExp(`^${nameWithParameters}$`);
+}
+
+function renderHtml(content: string, title = "") {
+  return `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+        }
+      </style>
+    </head>
+    <body>
+      ${content}
+    </body>
+  </html>
+`;
+}
 app.listen(port, () => {
   console.log(`Server started on port http://localhost:${port}`);
 });

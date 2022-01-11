@@ -108,9 +108,15 @@ async function analyzePages() {
     if (route.endsWith("/")) {
       parentRoute = route.slice(0, -1);
     } else {
+      let implicitIndex = false;
       const implicitRoute = route + "/";
-      const indexComponent = components.find((c) => c.route === implicitRoute);
-      component.implicitIndex = indexComponent !== undefined;
+      for (const c of components) {
+        if (c.route === implicitRoute) {
+          implicitIndex = true;
+          break;
+        }
+      }
+      component.implicitIndex = implicitIndex;
 
       parentRoute = route.split("/").slice(0, -1).join("/");
       parentRoute += "/";

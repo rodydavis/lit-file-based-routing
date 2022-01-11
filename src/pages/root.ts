@@ -1,4 +1,5 @@
 import { html, css, LitElement } from "lit";
+import { property } from "lit/decorators.js";
 
 export class RootModule extends LitElement {
   static override styles = css`
@@ -18,6 +19,8 @@ export class RootModule extends LitElement {
       flex: 1;
     }
   `;
+
+  @property() name = "Test";
 
   override render() {
     return html`

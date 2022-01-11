@@ -4,6 +4,7 @@ import { AppBase, Route } from "lit-file-router/src/app-base.js";
 
 @customElement("generated-app")
 export class GeneratedApp extends AppBase {
+
   override components: Map<string, Route> = new Map([
    ["/404", {
       component: "unknown-route",

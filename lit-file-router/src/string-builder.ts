@@ -11,6 +11,7 @@ export class StringBuilder {
   }
 
   writeAll(lines: string[]): void {
+    lines.push("");
     this._lines.push(lines.join("\n"));
   }
 
