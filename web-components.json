@@ -6,6 +6,8 @@
       "hasLoader": false,
       "route": "/404",
       "args": [],
+      "alias": "route0",
+      "relativePath": "./pages/404.js",
       "implicitIndex": false,
       "parentRoute": ""
     },
@@ -15,6 +17,8 @@
       "hasLoader": false,
       "route": "/custom/not/nested/route",
       "args": [],
+      "alias": "route1",
+      "relativePath": "./pages/custom.not.nested.route.js",
       "implicitIndex": false
     },
     {
@@ -25,6 +29,8 @@
       "args": [
         "id"
       ],
+      "alias": "route2",
+      "relativePath": "./pages/dashboard/account/:id.js",
       "implicitIndex": false,
       "parentRoute": "/dashboard/account/"
     },
@@ -34,6 +40,8 @@
       "hasLoader": false,
       "route": "/dashboard/account/",
       "args": [],
+      "alias": "route3",
+      "relativePath": "./pages/dashboard/account/index.js",
       "parentRoute": "/dashboard/account"
     },
     {
@@ -42,6 +50,8 @@
       "hasLoader": false,
       "route": "/dashboard/account",
       "args": [],
+      "alias": "route4",
+      "relativePath": "./pages/dashboard/account.js",
       "implicitIndex": true,
       "parentRoute": "/dashboard/"
     },
@@ -51,6 +61,8 @@
       "hasLoader": false,
       "route": "/dashboard/",
       "args": [],
+      "alias": "route5",
+      "relativePath": "./pages/dashboard/index.js",
       "parentRoute": "/dashboard"
     },
     {
@@ -59,6 +71,8 @@
       "hasLoader": false,
       "route": "/dashboard/overview",
       "args": [],
+      "alias": "route6",
+      "relativePath": "./pages/dashboard/overview.js",
       "implicitIndex": false,
       "parentRoute": "/dashboard/"
     },
@@ -68,6 +82,8 @@
       "hasLoader": false,
       "route": "/dashboard",
       "args": [],
+      "alias": "route7",
+      "relativePath": "./pages/dashboard.js",
       "implicitIndex": true,
       "parentRoute": ""
     },
@@ -77,6 +93,8 @@
       "hasLoader": false,
       "route": "/",
       "args": [],
+      "alias": "route8",
+      "relativePath": "./pages/index.js",
       "parentRoute": ""
     },
     {
@@ -84,7 +102,9 @@
       "path": "./src/pages/root.ts",
       "hasLoader": false,
       "route": "",
-      "args": []
+      "args": [],
+      "alias": "route9",
+      "relativePath": "./pages/root.js"
     },
     {
       "name": "admin-settings",
@@ -92,6 +112,8 @@
       "hasLoader": false,
       "route": "/settings/admin",
       "args": [],
+      "alias": "route10",
+      "relativePath": "./pages/settings/admin.js",
       "implicitIndex": false,
       "parentRoute": "/settings/"
     },
@@ -101,6 +123,8 @@
       "hasLoader": false,
       "route": "/settings/",
       "args": [],
+      "alias": "route11",
+      "relativePath": "./pages/settings/index.js",
       "parentRoute": "/settings"
     },
     {
@@ -109,6 +133,8 @@
       "hasLoader": false,
       "route": "/settings",
       "args": [],
+      "alias": "route12",
+      "relativePath": "./pages/settings.js",
       "implicitIndex": true,
       "parentRoute": ""
     },
@@ -121,6 +147,8 @@
         "page",
         "args"
       ],
+      "alias": "route13",
+      "relativePath": "./pages/test.:page.multiple.:args.js",
       "implicitIndex": false
     }
   ]

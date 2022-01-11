@@ -1,7 +1,5 @@
 import { html, css, LitElement } from "lit";
-import { customElement } from "lit/decorators.js";
 
-@customElement("root-module")
 export class RootModule extends LitElement {
   static override styles = css`
     main {
@@ -34,3 +32,4 @@ export class RootModule extends LitElement {
     `;
   }
 }
+customElements.define("root-module", RootModule);
