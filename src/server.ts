@@ -218,7 +218,7 @@ async function renderTree(route: string, args: { [key: string]: any }) {
     child = renderComponent(root.tag, args, child, data);
   }
 
-  return child || "";
+  return renderHtml(child || "");
 }
 
 function renderComponent(
@@ -257,7 +257,7 @@ function renderComponent(
   }
 
   sb.push(`</${tag}>`);
-  return renderHtml(sb.join("\n"));
+  return sb.join("\n");
 }
 
 function getComponent(route: string) {
@@ -293,8 +293,20 @@ function renderHtml(content: string, title = "") {
           padding: 0;
         }
       </style>
+      <script type="module">
+          const button = document.querySelector('button');
+          button.addEventListener('click', () => {
+            import('../dist/pages/root.js');
+            import('../dist/pages/index.js');
+            import('../dist/pages/dashboard.js');
+            import('../dist/pages/dashboard/index.js');
+            import('../dist/components/menu-button.js');
+          });
+        </script>
+      <script src="./node_modules/@webcomponents/template-shadowroot/template-shadowroot.min.js"></script>
     </head>
     <body>
+     <button>Hydrate</button>
       ${content}
     </body>
   </html>
