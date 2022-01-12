@@ -3,6 +3,7 @@ import { analyzePage, WebComponent } from "./analyze-page.js";
 import { generateApp } from "./generate/app.js";
 import { exportExpress } from "./generate/express.js";
 import { generateJson } from "./generate/json.js";
+import { generateLitRouter } from "./generate/lit-router.js";
 
 const args = process.argv.slice(2);
 
@@ -21,6 +22,9 @@ let appOutput = args.includes("--app");
 
 let expressFile = "./src/server.ts";
 let expressOutput = args.includes("--express");
+
+let litRouterFile = "./src/lit-router.ts";
+let litRouterOutput = args.includes("--lit-router");
 
 if (args.length == 0) {
   analyzePages();
@@ -85,7 +89,7 @@ function readPagesDirectory(
 
 async function analyzePages() {
   let i = 0;
-  const components: WebComponent[] = [];
+  let components: WebComponent[] = [];
   const pages: { path: string; content: string }[] = [];
   readPagesDirectory(inputDir, pages);
   for (const { path, content } of pages) {
@@ -132,6 +136,10 @@ async function analyzePages() {
     }
   }
 
+  components = components
+    .sort((a, b) => a.route.localeCompare(b.route))
+    .reverse();
+
   if (appOutput) {
     const output = generateApp(components, overrides);
     fs.writeFileSync(appFile, output);
@@ -146,6 +154,11 @@ async function analyzePages() {
   if (expressOutput) {
     const output = exportExpress(components);
     fs.writeFileSync(expressFile, output);
+  }
+
+  if (litRouterOutput) {
+    const output = generateLitRouter(components, overrides);
+    fs.writeFileSync(litRouterFile, output);
   }
 }
 

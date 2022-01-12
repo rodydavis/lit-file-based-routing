@@ -2,21 +2,21 @@ import "@lit-labs/ssr/lib/install-global-dom-shim.js";
 import "@lit-labs/ssr/lib/render-lit-html.js";
 import { LitElementRenderer } from "@lit-labs/ssr/lib/lit-element-renderer.js";
 
-import "./pages/404.js";
-import "./pages/custom.not.nested.route.js";
+import "./pages/test.:page.multiple.:args.js";
+import "./pages/settings/admin.js";
+import "./pages/settings/index.js";
+import "./pages/settings.js";
+import "./pages/dashboard/overview.js";
 import "./pages/dashboard/account/:id.js";
 import { loader as route2Loader } from "./pages/dashboard/account/:id.js";
 import "./pages/dashboard/account/index.js";
 import "./pages/dashboard/account.js";
 import "./pages/dashboard/index.js";
-import "./pages/dashboard/overview.js";
 import "./pages/dashboard.js";
+import "./pages/custom.not.nested.route.js";
+import "./pages/404.js";
 import "./pages/index.js";
 import "./pages/root.js";
-import "./pages/settings/admin.js";
-import "./pages/settings/index.js";
-import "./pages/settings.js";
-import "./pages/test.:page.multiple.:args.js";
 
 import express from "express";
 
@@ -31,112 +31,70 @@ interface Route {
 }
 
 const components = new Map<string, Route>([
-  [
-    "/test/:page/multiple/:args",
-    {
-      tag: "test-module",
-      hasImplicitIndex: false,
-    },
-  ],
-  [
-    "/settings/admin",
-    {
-      tag: "admin-settings",
-      hasImplicitIndex: false,
-      parentRoute: "/settings/",
-    },
-  ],
-  [
-    "/settings/",
-    {
-      tag: "settings-default",
-      hasImplicitIndex: false,
-      parentRoute: "/settings",
-    },
-  ],
-  [
-    "/settings",
-    {
-      tag: "settings-module",
-      hasImplicitIndex: true,
-    },
-  ],
-  [
-    "/dashboard/overview",
-    {
-      tag: "overview-module",
-      hasImplicitIndex: false,
-      parentRoute: "/dashboard/",
-    },
-  ],
-  [
-    "/dashboard/account/:id",
-    {
-      tag: "account-details",
-      loader: route2Loader,
-      hasImplicitIndex: false,
-      parentRoute: "/dashboard/account/",
-    },
-  ],
-  [
-    "/dashboard/account/",
-    {
-      tag: "account-info",
-      hasImplicitIndex: false,
-      parentRoute: "/dashboard/account",
-    },
-  ],
-  [
-    "/dashboard/account",
-    {
-      tag: "account-module",
-      hasImplicitIndex: true,
-      parentRoute: "/dashboard/",
-    },
-  ],
-  [
-    "/dashboard/",
-    {
-      tag: "dashboard-default",
-      hasImplicitIndex: false,
-      parentRoute: "/dashboard",
-    },
-  ],
-  [
-    "/dashboard",
-    {
-      tag: "dashboard-module",
-      hasImplicitIndex: true,
-    },
-  ],
-  [
-    "/custom/not/nested/route",
-    {
-      tag: "custom-route",
-      hasImplicitIndex: false,
-    },
-  ],
-  [
-    "/404",
-    {
-      tag: "unknown-route",
-      hasImplicitIndex: false,
-    },
-  ],
-  [
-    "/",
-    {
-      tag: "app-module",
-      hasImplicitIndex: false,
-    },
-  ],
-  [
-    "",
-    {
-      tag: "root-module",
-      hasImplicitIndex: false,
-    },
-  ],
+["/test/:page/multiple/:args", {
+  tag: "test-module",
+  hasImplicitIndex: false,
+}],
+["/settings/admin", {
+  tag: "admin-settings",
+  hasImplicitIndex: false,
+  parentRoute: "/settings/"
+}],
+["/settings/", {
+  tag: "settings-default",
+  hasImplicitIndex: false,
+  parentRoute: "/settings"
+}],
+["/settings", {
+  tag: "settings-module",
+  hasImplicitIndex: true,
+}],
+["/dashboard/overview", {
+  tag: "overview-module",
+  hasImplicitIndex: false,
+  parentRoute: "/dashboard/"
+}],
+["/dashboard/account/:id", {
+  tag: "account-details",
+  loader: route2Loader,
+  hasImplicitIndex: false,
+  parentRoute: "/dashboard/account/"
+}],
+["/dashboard/account/", {
+  tag: "account-info",
+  hasImplicitIndex: false,
+  parentRoute: "/dashboard/account"
+}],
+["/dashboard/account", {
+  tag: "account-module",
+  hasImplicitIndex: true,
+  parentRoute: "/dashboard/"
+}],
+["/dashboard/", {
+  tag: "dashboard-default",
+  hasImplicitIndex: false,
+  parentRoute: "/dashboard"
+}],
+["/dashboard", {
+  tag: "dashboard-module",
+  hasImplicitIndex: true,
+}],
+["/custom/not/nested/route", {
+  tag: "custom-route",
+  hasImplicitIndex: false,
+}],
+["/404", {
+  tag: "unknown-route",
+  hasImplicitIndex: false,
+}],
+["/", {
+  tag: "app-module",
+  hasImplicitIndex: false,
+}],
+["", {
+  tag: "root-module",
+  hasImplicitIndex: false,
+}],
 ]);
 
 app.get("/test/:page/multiple/:args", async (req, res) => {
@@ -206,8 +164,8 @@ async function renderTree(route: string, args: { [key: string]: any }) {
     const routeArgs = _route === route ? args : {};
     if (component.loader) data = await component.loader(_route, routeArgs);
     child = renderComponent(component.tag, routeArgs, child, data);
-    _route = component.parentRoute || "";
-    if (_route === "") break;
+    _route = component.parentRoute || '';
+    if (_route === '') break;
     component = getComponent(_route);
   }
 
@@ -262,9 +220,9 @@ function renderComponent(
 
 function getComponent(route: string) {
   for (const key of Array.from(components.keys())) {
+    if (key === route) return components.get(key)!;
     const regMatch = route.match(fixRegex(key));
     if (regMatch !== null) return components.get(key)!;
-    if (key === route) return components.get(key)!;
   }
 }
 

@@ -1,25 +1,60 @@
 {
   "components": [
     {
-      "name": "unknown-route",
-      "path": "./src/pages/404.ts",
+      "name": "test-module",
+      "path": "./src/pages/test.:page.multiple.:args.ts",
       "hasLoader": false,
-      "route": "/404",
+      "route": "/test/:page/multiple/:args",
+      "args": [
+        "page",
+        "args"
+      ],
+      "alias": "route13",
+      "relativePath": "./pages/test.:page.multiple.:args.js",
+      "implicitIndex": false
+    },
+    {
+      "name": "admin-settings",
+      "path": "./src/pages/settings/admin.ts",
+      "hasLoader": false,
+      "route": "/settings/admin",
       "args": [],
-      "alias": "route0",
-      "relativePath": "./pages/404.js",
+      "alias": "route10",
+      "relativePath": "./pages/settings/admin.js",
       "implicitIndex": false,
+      "parentRoute": "/settings/"
+    },
+    {
+      "name": "settings-default",
+      "path": "./src/pages/settings/index.ts",
+      "hasLoader": false,
+      "route": "/settings/",
+      "args": [],
+      "alias": "route11",
+      "relativePath": "./pages/settings/index.js",
+      "parentRoute": "/settings"
+    },
+    {
+      "name": "settings-module",
+      "path": "./src/pages/settings.ts",
+      "hasLoader": false,
+      "route": "/settings",
+      "args": [],
+      "alias": "route12",
+      "relativePath": "./pages/settings.js",
+      "implicitIndex": true,
       "parentRoute": ""
     },
     {
-      "name": "custom-route",
-      "path": "./src/pages/custom.not.nested.route.ts",
+      "name": "overview-module",
+      "path": "./src/pages/dashboard/overview.ts",
       "hasLoader": false,
-      "route": "/custom/not/nested/route",
+      "route": "/dashboard/overview",
       "args": [],
-      "alias": "route1",
-      "relativePath": "./pages/custom.not.nested.route.js",
-      "implicitIndex": false
+      "alias": "route6",
+      "relativePath": "./pages/dashboard/overview.js",
+      "implicitIndex": false,
+      "parentRoute": "/dashboard/"
     },
     {
       "name": "account-details",
@@ -66,17 +101,6 @@
       "parentRoute": "/dashboard"
     },
     {
-      "name": "overview-module",
-      "path": "./src/pages/dashboard/overview.ts",
-      "hasLoader": false,
-      "route": "/dashboard/overview",
-      "args": [],
-      "alias": "route6",
-      "relativePath": "./pages/dashboard/overview.js",
-      "implicitIndex": false,
-      "parentRoute": "/dashboard/"
-    },
-    {
       "name": "dashboard-module",
       "path": "./src/pages/dashboard.ts",
       "hasLoader": false,
@@ -85,6 +109,27 @@
       "alias": "route7",
       "relativePath": "./pages/dashboard.js",
       "implicitIndex": true,
+      "parentRoute": ""
+    },
+    {
+      "name": "custom-route",
+      "path": "./src/pages/custom.not.nested.route.ts",
+      "hasLoader": false,
+      "route": "/custom/not/nested/route",
+      "args": [],
+      "alias": "route1",
+      "relativePath": "./pages/custom.not.nested.route.js",
+      "implicitIndex": false
+    },
+    {
+      "name": "unknown-route",
+      "path": "./src/pages/404.ts",
+      "hasLoader": false,
+      "route": "/404",
+      "args": [],
+      "alias": "route0",
+      "relativePath": "./pages/404.js",
+      "implicitIndex": false,
       "parentRoute": ""
     },
     {
@@ -105,51 +150,6 @@
       "args": [],
       "alias": "route9",
       "relativePath": "./pages/root.js"
-    },
-    {
-      "name": "admin-settings",
-      "path": "./src/pages/settings/admin.ts",
-      "hasLoader": false,
-      "route": "/settings/admin",
-      "args": [],
-      "alias": "route10",
-      "relativePath": "./pages/settings/admin.js",
-      "implicitIndex": false,
-      "parentRoute": "/settings/"
-    },
-    {
-      "name": "settings-default",
-      "path": "./src/pages/settings/index.ts",
-      "hasLoader": false,
-      "route": "/settings/",
-      "args": [],
-      "alias": "route11",
-      "relativePath": "./pages/settings/index.js",
-      "parentRoute": "/settings"
-    },
-    {
-      "name": "settings-module",
-      "path": "./src/pages/settings.ts",
-      "hasLoader": false,
-      "route": "/settings",
-      "args": [],
-      "alias": "route12",
-      "relativePath": "./pages/settings.js",
-      "implicitIndex": true,
-      "parentRoute": ""
-    },
-    {
-      "name": "test-module",
-      "path": "./src/pages/test.:page.multiple.:args.ts",
-      "hasLoader": false,
-      "route": "/test/:page/multiple/:args",
-      "args": [
-        "page",
-        "args"
-      ],
-      "alias": "route13",
-      "relativePath": "./pages/test.:page.multiple.:args.js",
-      "implicitIndex": false
     }
   ]
 }

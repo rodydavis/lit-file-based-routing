@@ -6,15 +6,30 @@ import { AppBase, Route } from "lit-file-router/src/app-base.js";
 export class GeneratedApp extends AppBase {
 
   override components: Map<string, Route> = new Map([
-   ["/404", {
-      component: "unknown-route",
+   ["/test/:page/multiple/:args", {
+      component: "test-module",
       loadData: async () => null,
-      loadImport: () => import("./pages/404.js"),
+      loadImport: () => import("./pages/test.:page.multiple.:args.js"),
     }],
-   ["/custom/not/nested/route", {
-      component: "custom-route",
+   ["/settings/admin", {
+      component: "admin-settings",
       loadData: async () => null,
-      loadImport: () => import("./pages/custom.not.nested.route.js"),
+      loadImport: () => import("./pages/settings/admin.js"),
+    }],
+   ["/settings/", {
+      component: "settings-default",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings/index.js"),
+    }],
+   ["/settings", {
+      component: "settings-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/settings.js"),
+    }],
+   ["/dashboard/overview", {
+      component: "overview-module",
+      loadData: async () => null,
+      loadImport: () => import("./pages/dashboard/overview.js"),
     }],
    ["/dashboard/account/:id", {
       component: "account-details",
@@ -39,15 +54,20 @@ export class GeneratedApp extends AppBase {
       loadData: async () => null,
       loadImport: () => import("./pages/dashboard/index.js"),
     }],
-   ["/dashboard/overview", {
-      component: "overview-module",
-      loadData: async () => null,
-      loadImport: () => import("./pages/dashboard/overview.js"),
-    }],
    ["/dashboard", {
       component: "dashboard-module",
       loadData: async () => null,
       loadImport: () => import("./pages/dashboard.js"),
+    }],
+   ["/custom/not/nested/route", {
+      component: "custom-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/custom.not.nested.route.js"),
+    }],
+   ["/404", {
+      component: "unknown-route",
+      loadData: async () => null,
+      loadImport: () => import("./pages/404.js"),
     }],
    ["/", {
       component: "app-module",
@@ -58,26 +78,6 @@ export class GeneratedApp extends AppBase {
       component: "root-module",
       loadData: async () => null,
       loadImport: () => import("./pages/root.js"),
-    }],
-   ["/settings/admin", {
-      component: "admin-settings",
-      loadData: async () => null,
-      loadImport: () => import("./pages/settings/admin.js"),
-    }],
-   ["/settings/", {
-      component: "settings-default",
-      loadData: async () => null,
-      loadImport: () => import("./pages/settings/index.js"),
-    }],
-   ["/settings", {
-      component: "settings-module",
-      loadData: async () => null,
-      loadImport: () => import("./pages/settings.js"),
-    }],
-   ["/test/:page/multiple/:args", {
-      component: "test-module",
-      loadData: async () => null,
-      loadImport: () => import("./pages/test.:page.multiple.:args.js"),
     }],
   ]);
 }
