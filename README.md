@@ -2,6 +2,8 @@
 
 # Lit File Based Routing
 
+Archived in favor of: https://github.com/rodydavis/vscode-router-generator
+
 Lit router for nested layouts and file based routing. Similar to https://remix.run/ but at client side.
 
 [Demo](https://rodydavis.github.io/lit-file-based-routing/#/dashboard/)
