@@ -8,6 +8,8 @@ Lit router for nested layouts and file based routing. Similar to https://remix.r
 
 [Package](/lit-file-router/)
 
+Archived in favor of: https://github.com/rodydavis/vscode-router-generator
+
 ## Features
 
 - File based routing
